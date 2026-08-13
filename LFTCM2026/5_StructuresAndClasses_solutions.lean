@@ -2,9 +2,13 @@ import Mathlib
 
 set_option linter.unusedVariables false
 set_option linter.overlappingInstances false
+set_option warn.classDefReducibility false
 
--- ## Painful examples
+section examples
 
+-- # Examples to start with
+
+-- ## Two painful computations
 
 example {G : Type*} [Group G] (g e : G) (h : g * e = g) : e = 1 := by
   calc e = 1 * e := by rw [one_mul]
@@ -13,6 +17,7 @@ example {G : Type*} [Group G] (g e : G) (h : g * e = g) : e = 1 := by
       _ = g⁻¹ * g := by rw [h]
       _ = 1 := by rw [inv_mul_cancel]
   -- rw [← left_eq_mul, h]
+
 
 example {G : Type*} [CommGroup G] (N : Subgroup G) : CommGroup (G ⧸ N) := by
   constructor
@@ -24,6 +29,7 @@ example {G : Type*} [CommGroup G] (N : Subgroup G) : CommGroup (G ⧸ N) := by
   apply CommGroup.mul_comm
   -- exact QuotientGroup.Quotient.commGroup N
 
+-- ## `Lean` is not so stupid after all... but how?
 
 example {X Y : Type*} [MetricSpace X] [MetricSpace Y] [Group Y] [IsTopologicalGroup Y]
     (f g h : X → Y) : Continuous f → Continuous g → Continuous h → Continuous (f * g / h) := by
@@ -35,38 +41,30 @@ example {X Y : Type*} [MetricSpace X] [MetricSpace Y] [Group Y] [IsTopologicalGr
   · exact hh
   -- fun_prop
 
+-- ## Some crazy errors
 
--- ## Crazy errors
 
 /- Can you understand the error message (I'm not asking whether you understand *why* you get
 the error: just what it says). -/
 lemma quotComm_lemma {G : Type*} [Group G] (N : Subgroup G) : CommGroup (G ⧸ N) := by sorry
 
-@[reducible]
 -- This is false, but at least it compiles
 def quotComm_def {G : Type*} [Group G] (N : Subgroup G) : Group (G ⧸ N) := by sorry
 
-@[default_instance]
-instance (priority := 1) (M : Type*) [MetricSpace M] : TopologicalSpace M :=
-  MetricSpace.toPseudoMetricSpace.toUniformSpace.toTopologicalSpace
-
-
-example (X : Type*) [ht : TopologicalSpace X] [hm : MetricSpace X] (hX : DiscreteTopology X)
-    (f : X → X) :
-    @Continuous X X _ _ f := by
-  exact continuous_of_discreteTopology
 
 #print continuous_fst
-example (X Y : Type*) [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace (X × Y)]
-  /- (x : X) (y : Y) -/ : Continuous (fun p : X × Y ↦ p.1) := by
+
+example (X Y : Type*) [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace (X × Y)] :
+    Continuous (fun p : X × Y ↦ p.1) := by
   exact continuous_fst
 
 
 -- `⌘`
+end examples
 
-noncomputable section Groups
+section Groups
 
--- ### A wrong way to define mathematical structures
+-- ## A wrong way to define mathematical structures
 
 structure WrongGroup where
   carrier : Type*
@@ -78,6 +76,7 @@ structure WrongGroup where
   mul_assoc : ∀ (x y z : carrier), mul (mul x y) z = mul x (mul y z)
   inv_mul_cancel : ∀ (x : carrier), mul (inv x) x = one
 
+-- If this is how we play with products and inverses, we'd rather give up with `Lean` altogether...
 lemma WrongGroup.inv_eq_of_mul {α : WrongGroup} (x y : α.carrier) :
     α.mul x y = α.one → α.inv x = y := by
   intro h
@@ -91,17 +90,20 @@ structure WrongSemigroup where
   mul : carrier → carrier → carrier
   mul_assoc : ∀ (x y z : carrier), mul (mul x y) z = mul x (mul y z)
 
-
-lemma assoc_mul (X : WrongSemigroup) (x y z w : X.carrier) :
-    X.mul x (X.mul (X.mul y z) w) = X.mul (X.mul x y) (X.mul z w) := by
+-- A `lemma` saying that `a * ((b * c) * d = (a * b) * (c * d)`
+lemma assoc_mul (X : WrongSemigroup) (a b c d : X.carrier) :
+    X.mul a (X.mul (X.mul b c) d) = X.mul (X.mul a b) (X.mul c d) := by
   rw [X.mul_assoc]
   rw [X.mul_assoc]
 
-lemma assoc_mul' (G : WrongGroup) (x y z w : G.carrier) :
-    G.mul x (G.mul (G.mul y z) w) = G.mul (G.mul x y) (G.mul z w) := by
+-- If something is true in a Semigroup, it will stay so in a group; yet...
+lemma assoc_mul' (G : WrongGroup) (a b c d : G.carrier) :
+    G.mul a (G.mul (G.mul b c) d) = G.mul (G.mul a b) (G.mul c d) := by
   -- apply assoc_mul -- it does not work!
-  simp[G.mul_assoc]
+  simp [G.mul_assoc]
 
+/- Just to finish convincing ourselves that this `WrongXXX` approach is *wrong*, let's try to
+check that the usual addition makes `ℕ` into a `(Wrong)Semigroup`. -/
 def Nplus : WrongSemigroup where
   carrier := ℕ
   mul := (· + ·) -- or fun x y ↦ x + y
@@ -113,44 +115,54 @@ example : Nplus.mul (1 : ℕ) (1 : ℕ) = (2 : ℕ) := rfl
 
 -- `⌘`
 
--- ### A good way to define mathematical structures
+-- ## A right way to define mathematical structures
 
 #print Group
--- and right-clicking on it yields (the `_at_AMSS` avoids Lean complaining this already exists)
-structure Group_at_AMSS (G : Type*) extends DivInvMonoid G where
+-- and right-clicking on it yields (the `_in_Cortona` avoids Lean complaining this already exists)
+structure Group_in_Cortona (G : Type*) extends DivInvMonoid G where
   protected inv_mul_cancel : ∀ a : G, a⁻¹ * a = 1
 
 #print DivInvMonoid
 
-example {G : Type*} [Group G] (x y z : G) : x * (y * z) * (x * z)⁻¹ * (x * y * x⁻¹)⁻¹ = 1 := by
-  group
+-- -- whatsnew in
+-- -- @[to_additive] -- to be uncommented later, in the `Classes` section
+-- lemma mul_square {G : Type*} [Group G] {x y : G} (h : x * y = 1) : x * y ^ 2 = y := by
+--   rw [pow_two]
+--   rw [← mul_assoc]
+--   rw [h]
+--   group
 
-#print CommGroup
--- and right-clicking on it yields
-structure CommGroup_at_AMSS (G : Type*) extends Group G, CommMonoid G
-
-example {G : Type*} [CommGroup G] (x y : G) : (x * y)⁻¹ = x⁻¹ * y⁻¹ := by
-  -- group
-  rw [mul_inv_rev, mul_comm]
-  -- rw [mul_inv]
-
-example {A : Type*} [AddCommGroup A] (x y : A) : x + y + 0 = x + y := by
-  abel
-
--- whatsnew in
--- @[to_additive] -- to be uncommented later, in the `Classes` section
-lemma mul_square {G : Type*} [Group G] {x y : G} (h : x * y = 1) : x * y ^ 2 = y := by
-  rw [pow_two]
-  rw [← mul_assoc]
-  rw [h]
-  group
 
 -- actually `mul_assoc` does not only work for groups.
 #check mul_assoc
 
+/- **FAE** : Add a couple of examples showing this `Group` behaves nicely (eg with inheritance
+from `Monoid` or  something) and look at `Iff` and `And` as `structures.
+-/
+
+-- example {G : Type*} [Group G] (x y z : G) : x * (y * z) * (x * z)⁻¹ * (x * y * x⁻¹)⁻¹ = 1 := by
+--   group
+--
+-- #print CommGroup
+-- -- and right-clicking on it yields
+-- structure CommGroup_in_Cortona (G : Type*) extends Group G, CommMonoid G
+--
+-- example {G : Type*} [CommGroup G] (x y : G) : (x * y)⁻¹ = x⁻¹ * y⁻¹ := by
+--   -- group
+--   rw [mul_inv_rev, mul_comm]
+--   -- rw [mul_inv]
+--
+-- example {A : Type*} [AddCommGroup A] (x y : A) : x + y + 0 = x + y := by
+--   abel
+--
+--
+
 -- `⌘`
 
 -- ## Classes
+/- **FAE** Add topological examples for classes, like `DiscreteTopology` or the product on `X × Y`
+or the topology induced from a metric space. Perhaps observe that there is no Metric structure
+on a product, and discuss why. -/
 
 example {A : Type*} [AddGroup A] (x y : A) : x + y + 0 = x + y := by
   -- group
@@ -177,22 +189,22 @@ example {A : Type*} [AddGroup A] {a b : A} (h : a + b = 0) : a + 2 • b = b := 
 example (G : Type*) [Group G] [CommGroup G] (g : G) : 1 * g = g := by
   rw [one_mul]
 
--- #### The `Coe` class
-#check Complex.exp_add_pi_mul_I (3/2 : ℚ)
-#print RatCast
-#synth RatCast ℂ
-
--- Anonymous function def!
-instance : Coe WrongGroup Type where
-  coe := (·.carrier)
+-- -- #### The `Coe` class
+-- #check Complex.exp_add_pi_mul_I (3/2 : ℚ)
+-- #print RatCast
+-- #synth RatCast ℂ
+--
+-- -- Anonymous function def!
+-- instance : Coe WrongGroup Type where
+--   coe := (·.carrier)
 
 -- instance : CoeSort WrongGroup Type where
 --  coe := (·.carrier)
 
 
-example {α : WrongGroup} (x : α) :
-    α.mul x (α.inv x) = α.one := by
-  rw [← α.inv_mul_cancel (α.inv x), α.inv_eq_of_mul _ _ (α.inv_mul_cancel x)]
+-- example {α : WrongGroup} (x : α) :
+--     α.mul x (α.inv x) = α.one := by
+--   rw [← α.inv_mul_cancel (α.inv x), α.inv_eq_of_mul _ _ (α.inv_mul_cancel x)]
 
 instance : Add Bool where
   add b₁ b₂ := b₁ && b₂
@@ -200,77 +212,77 @@ instance : Add Bool where
 example : true + false = false := by rfl
 
 -- `⌘`
-
--- ### More about groups
-
-variable (G : Type*) [Group G]
-
--- #### Subgroups
-example (H : Subgroup G) : Group H := inferInstance
-
-variable (H : Subgroup G) in
-#synth Group H
-
-/- We have an automatic coercion from sets to types (more about this in the next class),
-so we get a coercion from subgroups to types: -/
-example (H : Subgroup G) (x : H) (hx : x = 1) : (x : G) = 1 := by
-  simp [hx]
-
-example (H : Subgroup G) : 1 ∈ H := H.one_mem
-
-/- Observe what happens if one writes
-
-  `AddSubgroup ℤ :=`
-  `_`
-
--/
-example : AddSubgroup ℤ where
-  carrier := {n : ℤ | Even n}
-  add_mem' := by
-    intro a b ha hb
-    -- simp at ha hb --not needed, actually
-    simp only [Even] at ha hb
-    obtain ⟨m, hm⟩ := ha
-    obtain ⟨n, hn⟩ := hb
-    rw [hn, hm]
-    use n + m
-    abel
-    -- grind
-  zero_mem' := ⟨0, by abel⟩
-  neg_mem' {x} hx := by
-    obtain ⟨r, _⟩ := hx
-    exact ⟨-r, by simp_all⟩
-
-/- In the example below, note two things:
-1. What happens if we remove `Comm`;
-2. What happens to the `G` and `Group G` that are globally defined in this section;
--/
-example (G : Type*) [CommGroup G] (H₁ H₂ : Subgroup G) {x y : G} (hx : x ∈ H₁) (hy : y ∈ H₂) :
-    x * y ∈ H₁ ⊔ H₂ := by
-  rw [Subgroup.mem_sup]
-  use x, hx, y, hy
-
-example (x : G) (hx : x ∈ (⊥ : Subgroup G)) : x = 1 := Subgroup.mem_bot.mp hx
-
-
----Let's discuss **dot notation**.
-example : (Subgroup.center G).Normal := by
--- #print Subgroup.Normal
-  apply Subgroup.Normal.mk
-  intro z hz g
-  let hz' := hz
-  rw [Subgroup.mem_center_iff] at hz --this looses hz
-  specialize hz g
-  rw [← mul_inv_eq_iff_eq_mul] at hz
-  rwa [hz]
-  -- exact Subgroup.instNormalCenter
-
--- `⌘`
+--
+-- -- ### More about groups
+--
+-- variable (G : Type*) [Group G]
+--
+-- -- #### Subgroups
+-- example (H : Subgroup G) : Group H := inferInstance
+--
+-- variable (H : Subgroup G) in
+-- #synth Group H
+--
+-- /- We have an automatic coercion from sets to types (more about this in the next class),
+-- so we get a coercion from subgroups to types: -/
+-- example (H : Subgroup G) (x : H) (hx : x = 1) : (x : G) = 1 := by
+--   simp [hx]
+--
+-- example (H : Subgroup G) : 1 ∈ H := H.one_mem
+--
+-- /- Observe what happens if one writes
+--
+--   `AddSubgroup ℤ :=`
+--   `_`
+--
+-- -/
+-- example : AddSubgroup ℤ where
+--   carrier := {n : ℤ | Even n}
+--   add_mem' := by
+--     intro a b ha hb
+--     -- simp at ha hb --not needed, actually
+--     simp only [Even] at ha hb
+--     obtain ⟨m, hm⟩ := ha
+--     obtain ⟨n, hn⟩ := hb
+--     rw [hn, hm]
+--     use n + m
+--     abel
+--     -- grind
+--   zero_mem' := ⟨0, by abel⟩
+--   neg_mem' {x} hx := by
+--     obtain ⟨r, _⟩ := hx
+--     exact ⟨-r, by simp_all⟩
+--
+-- /- In the example below, note two things:
+-- 1. What happens if we remove `Comm`;
+-- 2. What happens to the `G` and `Group G` that are globally defined in this section;
+-- -/
+-- example (G : Type*) [CommGroup G] (H₁ H₂ : Subgroup G) {x y : G} (hx : x ∈ H₁) (hy : y ∈ H₂) :
+--     x * y ∈ H₁ ⊔ H₂ := by
+--   rw [Subgroup.mem_sup]
+--   use x, hx, y, hy
+--
+-- example (x : G) (hx : x ∈ (⊥ : Subgroup G)) : x = 1 := Subgroup.mem_bot.mp hx
+--
+--
+-- ---Let's discuss **dot notation**.
+-- example : (Subgroup.center G).Normal := by
+-- -- #print Subgroup.Normal
+--   apply Subgroup.Normal.mk
+--   intro z hz g
+--   let hz' := hz
+--   rw [Subgroup.mem_center_iff] at hz --this looses hz
+--   specialize hz g
+--   rw [← mul_inv_eq_iff_eq_mul] at hz
+--   rwa [hz]
+--   -- exact Subgroup.instNormalCenter
+--
+-- -- `⌘`
 
 
 -- ## Exercises
 
-noncomputable section Exercises
+section Exercises
 
 -- **Exercise**
 -- Do you understand why the first of the next two lines compiles while the second
