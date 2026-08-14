@@ -1,0 +1,80 @@
+{
+
+    "files.exclude": {
+        "**/AGENTS.md": true,
+        "**/*.vo": true,
+        "**/*.vok": true,
+        "**/*.vos": true,
+        "**/*.aux": true,
+        "**/*.glob": true,
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/.lake": true,
+        "**/.github": true,
+        "**/*.olean": true,
+        "**/.DS_yml": true,
+        "**/.gitpod.yml": true,
+        "**/.vscode": true,
+        "lakefile.toml": true,
+        ".docker": true,
+        "build": true,
+        "home_page": true,
+        "img":true,
+        "LFTCM2026.lean": true,
+        "scripts": true,
+        "blueprint/print": true,
+        "blueprint/web": true,
+        "blueprint/.gitignore": true,
+        "blueprint/src/macros": true,
+        "blueprint/src/print.*": true,
+        "blueprint/src/web.*": true,
+        "blueprint/src/*.css": true,
+        "blueprint/src/*.pdf": true,
+        "blueprint/src/*.cfg": true,
+        "blueprint/src/latexmkrc": true,
+        "blueprint/src/blueprint.sty": true,
+        "blueprint/lean_decls": true,
+        "blueprint": true,
+        ".claude": true,
+        "html": true,
+        "lake-packages": true,
+        ".gitignore": true,
+        "lake-manifest.json": true,
+        "*.md": true,
+        "lakefile.lean": true,
+        "SDG.lean": true,
+        "lean-toolchain": true,
+        "LICENSE": true,
+        ".devcontainer": true,
+        "lean-tactics.tex": true
+    },
+
+    // Configure editor to insert spaces when pressing Tab
+    "editor.insertSpaces": true,
+    // Set the number of spaces per tab
+    "editor.tabSize": 2,
+    // Display vertical rulers at specified character column for readability
+    "editor.rulers": [100],
+    // Set the default file encoding to UTF-8
+    "files.encoding": "utf8",
+    // Use Unix-style line endings ('\n') by default
+    "files.eol": "\n",
+    // Ensure a final newline at the end of files
+    "files.insertFinalNewline": true,
+    // Trim final newlines at the end of files
+    "files.trimFinalNewlines": true,
+    // Remove any trailing whitespace on save
+    "files.trimTrailingWhitespace": true,
+    // Select read-only files
+    "files.readonlyInclude": {
+        "**/.elan/**": true,
+        "**/.lake/**": true
+    },
+    "cSpell.words": [
+        "Kock",
+        "Lawvere"
+    ]
+}
