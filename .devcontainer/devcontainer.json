@@ -1,0 +1,32 @@
+{
+  "name": "LFTCM2026",
+  "remoteUser": "vscode",
+
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+
+  // Runs when the container is created, and also when a prebuild is computed,
+  // so with prebuilds enabled mathlib is already downloaded and built.
+  "onCreateCommand": "lake exe cache get! && lake build",
+
+  // Runs on every start, after the (possibly older) prebuild is restored.
+  "updateContentCommand": "lake exe cache get && lake build",
+
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb"
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": ["leanprover.lean4"],
+      "settings": {
+        "files.watcherExclude": {
+          "**/.lake/**": true
+        }
+      }
+    }
+  }
+}

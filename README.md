@@ -106,15 +106,20 @@ You can use Codespaces if you have trouble installing Lean locally. These work f
 
 You can temporarily play with Lean using GitHub Codespaces. This requires a GitHub account, and you can only use it for a limited amount of time each month. If you are signed in to GitHub, click here:
 
-<a href='https://codespaces.new/riccardobrasca/Norwich' target="_blank" rel="noreferrer noopener"><img src='https://github.com/codespaces/badge.svg' alt='Open in GitHub Codespaces' style='max-width: 100%;'></a>
+<a href='https://codespaces.new/riccardobrasca/LFTCM2026' target="_blank" rel="noreferrer noopener"><img src='https://github.com/codespaces/badge.svg' alt='Open in GitHub Codespaces' style='max-width: 100%;'></a>
 
 * Make sure the Machine type is `4-core`, and then press `Create codespace`
-* After a couple of minutes you see a VS Code window in your browser. However, it is still busily downloading mathlib in the background, so give it another few minutes (5-10 to be safe) and then open a `.lean` file to start.
+* After a couple of minutes you see a VS Code window in your browser. It may still be busy setting up Lean and mathlib in the background, so wait until the terminal is idle before opening a `.lean` file.
+* Open `LFTCM2026/Test.lean`. If you see a blue squiggle under `#eval`, Lean is running correctly.
 
 To restart a previous codespace, go to [https://github.com/codespaces/](https://github.com/codespaces/).
 
 ## Troubleshooting
 
 If you get the error `unknown package 'Mathlib'` and a red squiggle under `import Mathlib.Tactic` then you probably didn't open the right folder (what you see might be slightly different from the screenshot below depending on the extensions you have installed, but the red squiggle shouldn't be there).
-* Make sure to select `File/Open Folder` (*not* `File/Open File`) and to select the root folder called `LFTCM2026` (or the name you chose during the installation). Note that this folder contains another folder also called `LFTCM2026`: you have to select the first one (*not* the one `Norwich/Norwich`).
+* Make sure to select `File/Open Folder` (*not* `File/Open File`) and to select the root folder called `LFTCM2026` (or the name you chose during the installation). Note that this folder contains another folder also called `LFTCM2026`: you have to select the first one (*not* the one `LFTCM2026/LFTCM2026`).
 * If the error persists you can use Codespaces as described above and ask for help.
+
+## License
+
+This repository is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).
