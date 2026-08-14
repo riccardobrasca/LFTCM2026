@@ -6,7 +6,7 @@ Authors: Riccardo Brasca
 
 module
 
-import LFTCM2026.Preliminaries.Test
+import LFTCM2026.Preliminaries
 
 /- This is a test file. Lean is configured correctly if you see the output "32" when
   mousing over or clicking on the next line, and you see no other errors in this file. -/
