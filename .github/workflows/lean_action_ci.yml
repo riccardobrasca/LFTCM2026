@@ -9,6 +9,12 @@ on:
 permissions:
   contents: read
 
+# A new push to master supersedes the previous build: cancel it instead of
+# letting stale runs compete for runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
