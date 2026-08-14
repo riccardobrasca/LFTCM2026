@@ -280,10 +280,7 @@ example (A : Type*) [AddGroup A] (H K : AddSubgroup A) :
   exact ⟨hH.conj_mem n hnH g, hK.conj_mem n hnK g⟩
 
 /- **¶ Exercise**
-What's the problem in the following declaration? Try to understand it, then fix it: -/
--- example (G : Type*) [TopologicalSpace G] [Group G] [NormedGroup G] (g₁ g₂ h : G) :
---     (g₁ * g₂) * h = g₁ * g₂ * h := by
---   grind
+
 
 /- **¶ Exercise**
 Given a multiplicative group `G` and an additive group `A`, what is the right way of putting a
