@@ -29,13 +29,13 @@ Note: to get this repository, you will need to download Lean's mathematical libr
   and press enter (note that VS Code suggests downloading mathlib, which is *not* this repository).
 
   ![2](img/2.png)
-* Choose a name for the folder where you want to have this repository (for example `Norwich`).
+* Choose a name for the folder where you want to have this repository (for example `LFTCM2026`).
   This downloads the project, including mathlib, and will take a bit of time.
-  ![3](img/1.png)
+  ![3](img/3.png)
 * Press `Open Project Folder` when asked if you want to open the folder.
 * If VS Code asks `Do you trust the authors of the files in this folder?` click `Yes, I trust the authors`.
-* Open the file `Norwich/Test.lean` using the explorer button in the top-left.
-  ![3](img/3.png)
+* Open the file `LFTCM2026/Test.lean` using the explorer button in the top-left.
+  ![4](img/4.png)
 * VS Code will pause for a bit (10-40 seconds, depending on your computer), showing a `Starting Lean language client` pop-up.
 * When the pop-up `Imports of 'Test.lean' are out of date and must be rebuilt.` appears, click on `Restart File` and wait a couple of seconds (this part should be very quick).
   ![5](img/5.png)
@@ -49,10 +49,10 @@ Note: to get this repository, you will need to download Lean's mathematical libr
 
 * Run the following three commands.
   ```
-  git clone https://github.com/riccardobrasca/Norwich.git
+  git clone https://github.com/riccardobrasca/LFTCM2026.git
   ```
   ```
-  cd Norwich
+  cd LFTCM2026
   ```
   ```
   lake exe cache get!
@@ -80,14 +80,14 @@ Note: to get this repository, you will need to download Lean's mathematical libr
 
 * If VS Code asks `Do you trust the authors of the files in this folder?` click `Yes, I trust the authors`
 
-* Test that everything is working by opening `Norwich/Test.lean`.
+* Test that everything is working by opening `LFTCM2026/Test.lean`.
   It is normal if it takes 10-40 seconds for Lean to start up.
 
 * Everything should be ready now. If you see a blue squiggle under `#eval`, Lean is running correctly.
 
 ### Update the repository
 
-If you have already followed the steps above, and want to update the repository, open a terminal in your local copy of this repository (e.g. `cd Norwich`) and then run
+If you have already followed the steps above, and want to update the repository, open a terminal in your local copy of this repository (e.g. `cd LFTCM2026`) and then run
 ```
 git pull
 ```
