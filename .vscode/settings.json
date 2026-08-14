@@ -23,6 +23,7 @@
         "build": true,
         "home_page": true,
         "img":true,
+        "LFTCM2026/Preliminaries.lean": true,
         "LFTCM2026.lean": true,
         "scripts": true,
         "LFTCM2026/Preliminaries": true,
