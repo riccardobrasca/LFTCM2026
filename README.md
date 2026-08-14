@@ -1,5 +1,7 @@
 # Lean For The Curious Mathematician 2026
 
+[![Lean Action CI](https://github.com/riccardobrasca/LFTCM2026/actions/workflows/lean_action_ci.yml/badge.svg?branch=master)](https://github.com/riccardobrasca/LFTCM2026/actions/workflows/lean_action_ci.yml)
+
 This is the repository for the workshop *Lean For The Curious Mathematician 2026*.
 
 * All the files needed during the talk are in the subfolder `LFTCM2026`. See below for the instructions to install everything you need.
