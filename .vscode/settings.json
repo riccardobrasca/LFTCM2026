@@ -25,7 +25,7 @@
         "img":true,
         "LFTCM2026.lean": true,
         "scripts": true,
-        "Preliminaries": true,
+        "LFTCM2026/Preliminaries": true,
         "blueprint/print": true,
         "blueprint/web": true,
         "blueprint/.gitignore": true,
