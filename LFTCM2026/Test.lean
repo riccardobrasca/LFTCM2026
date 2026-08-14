@@ -6,7 +6,7 @@ Authors: Riccardo Brasca
 
 module
 
-import Mathlib.Tactic
+import LFTCM2026.Preliminaries.Test
 
 /- This is a test file. Lean is configured correctly if you see the output "32" when
   mousing over or clicking on the next line, and you see no other errors in this file. -/
