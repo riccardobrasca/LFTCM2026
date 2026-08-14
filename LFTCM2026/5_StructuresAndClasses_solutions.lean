@@ -1,11 +1,5 @@
 import Mathlib
 
-set_option autoImplicit false
-set_option linter.unusedVariables false
-set_option linter.overlappingInstances false
-set_option warn.classDefReducibility false
-set_option linter.style.openClassical false
-
 section Examples
 
 -- # Two painful computations

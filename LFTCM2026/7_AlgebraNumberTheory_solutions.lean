@@ -1,10 +1,4 @@
 import Mathlib
-
-set_option autoImplicit false
-set_option linter.unusedVariables false
-set_option linter.overlappingInstances false
-set_option warn.classDefReducibility false
-
 section Groups
 
 example {G : Type*} [Group G] (x y z : G) : x * (y * z) * (x * z)⁻¹ * (x * y * x⁻¹)⁻¹ = 1 := by
