@@ -286,8 +286,21 @@ example (A : Type*) [AddGroup A] (H K : AddSubgroup A) :
   exact ⟨hH.conj_mem n hnH g, hK.conj_mem n hnK g⟩
 
 /- **¶ Exercise**
+What's the problem in the following declaration? Try to understand it, then fix it: -/
+-- example (G : Type*) [TopologicalSpace G] [Group G] [NormedGroup G] (g₁ g₂ h : G) :
+--     (g₁ * g₂) * h = g₁ * g₂ * h := by
+--   grind
+
+/- **¶ Exercise**
 Given a multiplicative group `G` and an additive group `A`, what is the right way of putting a
-multiplicative structure on `G × A` where `(g, a) * (h, b) = (g * h, a + b)`? -/
+multiplicative structure on `G × A` where `(g, a) * (h, b) = (g * h, a + b)`?
+**HINTS:** This might be hard: a sugggestion is to do it in steps, first defining the multiplication
+just as a function, then definining a `Mul` instance, then providing a trivial lemma saying
+how this multiplication behaves, and then providing the final instance (where you actually don't
+need to provide *all* fields, as some can be deduced automatically: try to comment them to see when
+`Lean` complains).
+-/
+
 /- *Sol.:* -/
 def AddMul_mul {G A : Type*} [Group G] [AddGroup A] : (G × A) → (G × A) → (G × A) :=
   fun ⟨g, a⟩ ⟨h, b⟩ ↦ ⟨g * h, a + b⟩
@@ -318,7 +331,6 @@ instance {G A : Type*} [Group G] [AddGroup A] : Group (G × A) where
     rw [AddMul_mul_def]
     simp only [inv_mul_cancel, neg_add_cancel]
     rfl
-
 
 
 end Exercises
