@@ -24,7 +24,7 @@ Note: to get this repository, you will need to download Lean's mathematical libr
   ![1](img/1.png)
 * Type
   ```
- https://github.com/riccardobrasca/LFTCM2026.git
+  https://github.com/riccardobrasca/LFTCM2026.git
   ```
   and press enter (note that VS Code suggests downloading mathlib, which is *not* this repository).
 
