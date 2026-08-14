@@ -10,8 +10,10 @@
   // so with prebuilds enabled mathlib is already downloaded and built.
   "onCreateCommand": "lake exe cache get! && lake build",
 
-  // Runs on every start, after the (possibly older) prebuild is restored.
-  "updateContentCommand": "lake exe cache get && lake build",
+  // Runs after the (possibly older) prebuild is restored, to rebuild exercise
+  // files that changed since it was computed. Mathlib is pinned, so the
+  // prebuild's cache is still good and there is nothing to re-fetch.
+  "updateContentCommand": "lake build",
 
   "hostRequirements": {
     "cpus": 4,
