@@ -106,6 +106,9 @@ it for a limited amount of time each month. If you are signed in to GitHub, clic
 
 <a href='https://codespaces.new/riccardobrasca/LFTCM2026' target="_blank" rel="noreferrer noopener"><img src='https://github.com/codespaces/badge.svg' alt='Open in GitHub Codespaces' style='max-width: 100%;'></a>
 
+* Check [your Codespaces settings](https://github.com/settings/codespaces): under `Region`, keep
+  `Set automatically` (the default). The environment is prepared in advance for Europe, so a
+  codespace created from elsewhere still works, but takes longer to start.
 * Press `Create codespace`.
 * After a couple of minutes you get a VS Code window in your browser. It may still be setting up
   Lean and mathlib in the background, so wait until the terminal is idle before opening a
