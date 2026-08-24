@@ -280,7 +280,70 @@ example (A : Type*) [AddGroup A] (H K : AddSubgroup A) :
   exact ⟨hH.conj_mem n hnH g, hK.conj_mem n hnK g⟩
 
 /- **¶ Exercise**
+You'll soon see how `Mathlib` defines topological spaces. For this exercise, we're implementing
+a toy model: a structure that I call *Cortological* spaces, where we just ask for the datum of a
+collection of "opens", satisfying no intersection/union property but just obeying the requirement
+that the empty set and the universal set belong to the collection. -/
 
+-- **1** Define the structure of a Cortological space on a type `X`: should this be a class?
+/- *Sol.:* : Yes, it should be a class, and here it is. -/
+class CortologicalSpace (X : Type) where
+  opens : Set (Set X)
+  univ : Set.univ ∈ opens
+  empty : ∅ ∈ opens
+
+/- **2** Put a Cortological structure on `ℕ`, declaring that a non-empty set is "open" if it
+contains arbitrarily large elements, and then prove that the intersection of two opens is open:-/
+/- *Sol.:* -/
+def contains_arbitrarily_large (S : Set ℕ) : Prop := ∃ N, ∀ a, N ≤ a → a ∈ S
+
+instance : CortologicalSpace ℕ where
+  opens := {∅} ∪ Set.ofPred contains_arbitrarily_large
+  univ := by simp [contains_arbitrarily_large]
+  empty := by simp
+
+open CortologicalSpace in
+example (X Y : Set ℕ) : X ∈ opens → Y ∈ opens → X ∩ Y ∈ opens := by
+  intro hX hY
+  -- rcases (Set.mem_union _ _ _).mpr hX with _ | ⟨N, hN⟩
+  -- · simp_all
+  -- rcases (Set.mem_union _ _ _).mpr hY with _ | ⟨M, hM⟩
+  -- · simp_all
+  -- right
+  -- use max M N
+  -- intro a ha
+  -- exact ⟨hN a (by grind), hM a (by grind)⟩
+  rcases (Set.mem_union _ _ _).mpr hX, (Set.mem_union _ _ _).mpr hY with
+    ⟨_ | ⟨N, hN⟩, _ | ⟨M, hM⟩⟩ <;> try simp_all
+  right
+  use max M N
+  grind
+
+
+open CortologicalSpace
+/- **3** Make sure that if `X` and `Y` are both `CortologicalSpaces`, Lean automatically puts a
+structure of `CortologicalSpace` on `X × Y`: I'm not asking any relation among this structure
+and the starting structures whatsoever... (remember that this is a *toy model*!): -/
+
+instance foo (X Y : Type) [CortologicalSpace X] [CortologicalSpace Y] : CortologicalSpace (X × Y) where
+  opens := {.univ } ∪ {∅}
+  univ := by simp
+  empty := by simp
+
+/- **4** Define the structure of punctured cortological spaces and discuss advantages and
+disadvantages of making it a class (think at the product of two punctured Cortological spaces). -/
+/- *Sol.:* -/
+class PuncturedCortologicalSpace (X : Type) extends CortologicalSpace X where
+  pt : X
+
+/- Agains the choice of making it a class, there is the remark that many Cortological Spaces can be
+"punctured" in several ways, and we don't want Lean to automatically pick up a point; on the other
+hand, if we make it a class, we can automatically deduce a structure of
+  `PuncturedCortologicalSpace X × Y` by -/
+open PuncturedCortologicalSpace in
+instance (X Y : Type) [PuncturedCortologicalSpace X] [PuncturedCortologicalSpace Y] :
+  PuncturedCortologicalSpace (X × Y) where
+    pt := (pt, pt)
 
 /- **¶ Exercise**
 Given a multiplicative group `G` and an additive group `A`, what is the right way of putting a
