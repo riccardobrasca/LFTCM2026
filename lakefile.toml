@@ -7,6 +7,7 @@ defaultTargets = ["LFTCM2026"]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
 autoImplicit = false
 linter.unusedVariables = false
+linter.unusedTactic = false # proofs here end with `done`, which the linter calls unused
 linter.overlappingInstances = false
 linter.style.openClassical = false
 warn.classDefReducibility = false

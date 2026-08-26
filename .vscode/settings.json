@@ -4,6 +4,7 @@
     "files.exclude": {
         // Tooling and OS noise
         "**/AGENTS.md": true,
+        "**/CLAUDE.md": true,
         "**/.git": true,
         "**/.DS_Store": true,
         "**/Thumbs.db": true,
