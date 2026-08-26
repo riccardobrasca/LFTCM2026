@@ -43,11 +43,19 @@ These are what beginners read during the conference. `LFTCM2026/BasicTactic.lean
 - By convention they live in the `LFTCM2026/` source directory, which is what the README tells
   participants to open and what the VS Code explorer is set up to show. Nothing technical depends
   on the location — nothing imports them — so this is about the curated view, not the build.
-- **Comment heavily — explain almost everything.** Assume the reader has just met Lean. Say what a
-  tactic does and why it is the right one here, what the goal looks like before and after, what a
-  piece of notation means, why a hypothesis is needed. A bare correct proof is a failure in these
-  files; prose between the proofs is the actual teaching material. Prefer the readable proof over
-  the short one, and prefer spelling a step out over a clever one-liner.
+- **Do not over-comment. There is a speaker in the room.** These files are used while someone is
+  explaining them out loud, so the comments are a support for that talk, not a substitute for it.
+  Say what a tactic does, what a piece of notation means, why a hypothesis is needed — then stop.
+  Anything the speaker will say anyway, and anything the participant can read off the Infoview,
+  does not need to be written down. A file drowning in prose is harder to follow along with than a
+  sparse one.
+  - The heavily commented first example of `LFTCM2026/BasicTactic.lean` is the right amount for a
+    *first* contact with tactics, where every symbol is new. It is the ceiling, not the norm: for
+    the rest of that file and for later sessions, comment noticeably more lightly.
+  - When in doubt, cut. Err on the side of too little; the speaker fills the gap, and whoever
+    writes the session can always add a line back.
+- Prefer the readable proof over the short one, and prefer spelling a step out over a clever
+  one-liner. Assume the reader has just met Lean.
 - Keep the visible machinery minimal: anything technical, ugly, or off-topic that a session needs
   belongs in `Preliminaries` instead.
 
