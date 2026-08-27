@@ -16,7 +16,7 @@ example {G : Type*} [Group G] (x y z : G) : x * (y * z) * (x * z)⁻¹ * (x * y 
 
 
 example {G : Type*} [CommGroup G] (x y : G) : (x * y)⁻¹ = x⁻¹ * y⁻¹ := by
-  -- group
+  -- group -- the Group is commutative!
   rw [mul_inv_rev, mul_comm]
   -- rw [mul_inv]
   done
@@ -129,8 +129,8 @@ example : (Subgroup.center G).Normal := by
 /- ### Homomorphisms
 Once again, a homomorphism is a collection of things: a bare function, together with the properties
 that it must satisfy to be a group homomorphism. So, the *collection* of all these homomorphisms
-is a `structure`! Note that actually we define `monoid` homomorphisms, because a multiplicative
-map sending `1` to `1` automatically preserves the inverse. -/
+is a `structure`, denoted `G →* H`! Note that actually we define `monoid` homomorphisms, because a
+multiplicative map sending `1` to `1` automatically preserves the inverse. -/
 
 structure MonoidHom_Cortona (M N : Type*) [Monoid M] [Monoid N] where
   toFun : M → N
@@ -255,7 +255,7 @@ end Groups
 section Rings
 
 /- ## Rings
-The situation is very similar to that for `Group`s: they're a class, and they have a dedicated
+The situation is very similar to the one for `Group`s: they're a class, and they have a dedicated
 tactic, `ring`: it closes every goal that holds in a *free commutative ring*. There is also `grind`
 that, on top of `ring` , is capable of performing (some) logical reasoning and arithmetic,
 including inequalities. -/
@@ -290,12 +290,11 @@ example (R : Type*) [CommRing R] (x y : R) : (x + y) ^ 2 = x ^ 2 + 2 * x * y + y
 lemma sixth_pow (R : Type*) [CommRing R] (x y : R) : (x + y) ^ 6 =
     x ^ 6 + 6 * x ^ 5 * y +  15 * x ^ 4 * y ^ 2 + 20 * x ^ 3 * y ^ 3 +
       15 * x ^ 2 * y ^ 4 + 6 * x * y ^ 5 + y ^ 6 := by
-  ring
   -- grind
   -- exact?
+  ring
   done
 
-#print axioms sixth_pow
 
 example (R : Type*) [CommRing R] (x y : R) (H : x ^ 2 ≠ y ^ 2) : x ≠ y := by
   -- ring
@@ -365,11 +364,11 @@ Except that we **don't agree**.
 variable (K : Type*) [Field K]
 #print Module --it's a class
 
-variable (V : Type*) [Module K V] --but it *requires* that `V` be a(n additive, commutative) group:
-variable (W : Type*) [AddCommGroup W] [Module K W]
+variable (V : Type*) /- [AddCommGroup V]  -/[Module K V] --but it *requires* that `V` be a(n additive, commutative) group:
 
-example (T : Submodule K W) (x y : W) (c : K) : x ∈ T → y ∈ T →
-  -- c * x + y ∈ T := sorry
+
+example (T : Submodule K V) (x y : V) (c : K) : x ∈ T → y ∈ T →
+  -- c * x + y ∈ T := sorry -- **why this does not work?** The `*` should be a `•`
     c • x + y ∈ T := by
   intro hx hy
   -- exact T.add_mem (T.smul_mem c hx) hy
@@ -413,7 +412,9 @@ end VectorSpaces
 -- **FAE** Add something about `ℤ/nℤ` just for fun and to justify the "Number Theory"?
 
 
-section Exercises
+noncomputable section Exercises
+open Function
+
 
 /- **¶ Exercise**
 Why is the following example broken? Fix its statement, then prove it. -/
@@ -433,6 +434,13 @@ example (A : Type*) [AddGroup A] (f : A →+ ℤ) (hf : 1 ∈ f.range) : Surject
   simp [map_zsmul, hb]
   done
 
+
+/- **¶ Exercise**
+Prove the claim made in class that a monoid homomorphism between groups respects the inverse. -/
+example (G H : Type*) [Group G] [Group H] (f : MonoidHom G H) (x : G) : f x⁻¹ = (f x)⁻¹ := by
+  rw [← mul_eq_one_iff_eq_inv, ← f.map_mul, inv_mul_cancel, f.map_one]
+  done
+
 -- **¶ Exercise**
 /- The kernel of a ring homomorphism is an ideal: what is an ideal is part of the exercise... -/
 def kernel (R S : Type*) [CommRing R] [CommRing S] (f : R →+* S) : Ideal R where
@@ -450,6 +458,160 @@ def kernel (R S : Type*) [CommRing R] [CommRing S] (f : R →+* S) : Ideal R whe
     simp only [smul_eq_mul, Set.mem_ofPred_eq, map_mul]
     rw [hx, mul_zero]
     done
+
+/- **¶ Exercise**
+State and that a group is commutative if and only if the map `x ↦ x⁻¹` is a group homomorphism:
+even if you find a one-line proof, try to produce the whole term. To get `⁻¹`, type `\-1`. It can
+be easier to split this `if and only if` statement in two declarations: are they both lemmas, both
+definitions, a lemma and a definition?. -/
+def inv_hom_of_comm (G : Type*) [CommGroup G] : G →* G where
+  toFun := (·)⁻¹
+  map_one' := by simp
+  map_mul' x y := by
+    simp [← mul_inv_rev, mul_comm]
+    done
+
+def comm_of_inv_hom (G : Type*) [Group G] (f : G →* G) (hf : ∀ x, f x = x⁻¹) :
+    CommGroup G where
+  mul_comm g h := by
+    have h1 := hf (g * h)
+    rwa [mul_inv_rev, map_mul, hf, hf, inv_mul_eq_iff_eq_mul, ← mul_assoc, eq_mul_inv_iff_mul_eq,
+      eq_mul_inv_iff_mul_eq, mul_assoc, inv_mul_eq_iff_eq_mul] at h1
+    done
+
+/- **¶ Exercise**
+Prove that the homomorphisms between commutative monoids have a structure of commutative monoid. -/
+example (M N : Type*) [CommMonoid M] [CommMonoid N] : CommMonoid (M →* N) where
+  mul := by
+    intro f g
+    fconstructor
+    · use fun x ↦ f x * g x
+      simp
+    · intro x y
+      simp [map_mul, mul_assoc _ (f y) _, mul_comm (f y) _, ← mul_assoc]
+    done
+  mul_assoc := by
+    intro f g h
+    ext x
+    simp only [MonoidHom.mul_apply]
+    exact mul_assoc ..
+    done
+  one := by
+    fconstructor
+    · use fun _ ↦ 1
+    · intro x y
+      simp
+    done
+  one_mul := by simp
+  mul_one := by simp
+  mul_comm := by
+    intro f g
+    ext x
+    simp only [MonoidHom.mul_apply]
+    exact mul_comm ..
+    done
+
+
+/- **¶ Exercise**
+Prove that an injective and surjective group homomorphism is an isomorphism:
+but what's an isomorphism? -/
+def IsoOfBijective (G H : Type*) [Group G] [Group H] (f : G →* H)
+    (h_surj : Surjective f) (h_inj : Injective f) : G ≃* H := by
+  set g : G ≃ H := by
+    apply Equiv.ofBijective f
+    simp [Bijective, h_inj, h_surj] with hg
+  use g
+  intro x y
+  simp only [hg, Equiv.toFun_as_coe]
+  grind
+  done
+
+/- **¶ Exercise**
+State and prove that the image of an ideal through a surjective ring homomorphism is an ideal. -/
+def image_ideal {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S) (I : Ideal R)
+    (hf : Surjective f) : Ideal S where
+  carrier := f.1 '' I
+  add_mem' := by
+    intro x y hx hy
+    obtain ⟨a, ha_mem, hax⟩ := hx
+    obtain ⟨b, hb_mem, hby⟩ := hy
+    simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, Set.mem_image, SetLike.mem_coe]
+    use a + b
+    constructor
+    · apply I.add_mem
+      · exact ha_mem
+      · exact hb_mem
+    · rw [map_add, ← hax, ← hby]
+      simp
+    done
+  zero_mem' := by
+    simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, Set.mem_image, SetLike.mem_coe]
+    use 0
+    constructor
+    · apply I.zero_mem
+    apply map_zero
+    done
+  smul_mem' := by
+    intro s x hx
+    obtain ⟨a, ha_mem, hax⟩ := hx
+    obtain ⟨r, hr⟩ := hf s
+    simp only [RingHom.toMonoidHom_eq_coe, MonoidHom.coe_coe, smul_eq_mul, Set.mem_image,
+      SetLike.mem_coe]
+    use r * a
+    constructor
+    · apply I.mul_mem_left
+      exact ha_mem
+    · rw [map_mul, hr, ← hax]
+      rfl
+    done
+
+/- **¶ Exercise**
+This is the standard fact that an ideal containing a unit is the whole ring. -/
+example {R S : Type*} [CommRing R] [CommRing S] (I : Ideal R) (r : R) :
+    r ∈ I → IsUnit r → I = ⊤ := by
+  intro h_mem h
+  obtain ⟨⟨u, v, huv, hvu⟩, H⟩ := h
+  simp only at H
+  ext x
+  constructor
+  · intro hx
+    simp only [Submodule.mem_top]
+  · intro hx
+    set y := r * x with hy
+    have : y ∈ I := by
+      rw [hy]
+      rw [mul_comm]
+      apply I.mul_mem_left
+      exact h_mem
+    apply_fun (fun t ↦ v • t) at hy
+    rw [← H] at hy
+    rw [smul_eq_mul, smul_eq_mul, ← mul_assoc _ u, hvu, one_mul] at hy
+    rw [← hy]
+    -- rw [← smul_eq_mul]
+    -- apply I.smul_mem
+    apply I.mul_mem_left
+    exact this
+  done
+
+
+/- **¶ Exercise**
+**State** and **show** that a linear map is injective if and only if it has trivial kernel: try
+first to do the whole proof by hand, and then to find it in Mathlib. -/
+example (K V W : Type*) [Field K] [AddCommGroup V] [AddCommGroup W] [Module K V] [Module K W]
+    (f : V →ₗ[K] W) : Injective f ↔ f.ker = ⊥ := by
+    -- (f.ker_eq_bot_iff).symm
+  refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
+  · ext x
+    -- simp [Submodule.mem_bot]
+    refine ⟨fun hx ↦ ?_, fun hx ↦ ?_⟩
+    · apply h
+      rw [map_zero]
+      apply hx
+    · rw [hx]
+      apply zero_mem
+  · intro x y H
+    rwa [← sub_eq_zero, ← map_sub, ← f.mem_ker, h, Submodule.mem_bot, sub_eq_zero] at H
+
 
 
 -- **¶ Exercise**
