@@ -31,7 +31,7 @@ which hypotheses you may use. Watching the goal change as you move the cursor li
 far the fastest way to learn what a tactic does. Do that constantly.
 
 One warning before we start: Lean is *whitespace sensitive*. Indentation is part of the syntax, not
-decoration, so we suggest following closely the indentation conventions used in our files.
+decoration, so we suggest sticking closely to the indentation conventions used in our files.
 -/
 
 /-
@@ -57,8 +57,11 @@ Two things in that sentence do deserve a comment now:
   general you can hover the cursor over a symbol and VS Code will tell you how to type it. The
   LaTeX command is a good guess.
 
-The keywords `by` and `done` are the delimiters of the proof: they just tell Lean that you plan to insert the proof between the line following by and the line preceding done. They are analogous to LaTeX
-\begin{proof} and \end{proof}. In particular, the fact that you write done at the end is not telling Lean that you are really "done", just explaining that what comes after done will have nothing to do with this theorem (you will see an error if the proof is not complete).
+The keywords `by` and `done` delimit the proof: they tell Lean that you intend to write the proof
+between the line after `by` and the line before `done`. They play the role of `\begin{proof}` and
+`\end{proof}` in LaTeX. In particular, writing `done` is not you telling Lean that the proof is
+finished: it only marks the point after which nothing concerns this theorem any more — and if the
+proof is in fact not complete, that is exactly where you get an error.
 -/
 example {X Y Z : Type*} [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
     (f : X → Y) (g : Y → Z) (hf : Continuous f) (hg : Continuous g) : Continuous (g ∘ f) := by
@@ -115,8 +118,8 @@ example (x y : ℝ) (hx : x = 3) (hy : y = 4) : y = 4 := by
 /-!
 ## The `rw` tactic
 
-`rw` ("rewrite") is the one of the most basic Lean tactic.
-Given an equality, it replaces, in the goal, the left-hand side by the right-hand side.
+`rw` ("rewrite") is one of the most basic Lean tactics.
+Given an equality, it replaces the left-hand side by the right-hand side in the goal.
 
 An assumption such as `hx : x + 4 = 7` is an equality, and so is a lemma from Mathlib. `rw` does
 not distinguish between the two.
@@ -231,8 +234,8 @@ example (x y : ℝ) (hx : 0 ≤ x) (h : x < y) : 0 ≤ y := by
   exact le_trans hx hxy
   done
 
-/- The intermediate statement is up to you: here it rewrites the `7` of the goal as `x + 4`,
-which is what makes `h` usable. -/
+/- The intermediate statement is up to you: this one writes the `7` of the goal as `x + 4`, which
+is what makes `h` usable. -/
 example (x y : ℝ) (hx : x + 4 = 7) (h : x + 4 + y = 5) : 7 + y = 5 := by
   have h7 : 7 + y = x + 4 + y := by
     rw [hx]
@@ -258,9 +261,9 @@ example (P : Prop) (h : False) : P := by
   contradiction
   done
 
-/- `contradiction` does no mathematics: it only spots hypotheses that are incompatible on the nose.
-Here too `h` and `h'` cannot both hold, but seeing that needs a lemma relating `≤` and `<`, so the
-tactic gives up. The error below is deliberate: read it in the Infoview. -/
+/- `contradiction` does no mathematics: it only spots hypotheses that are incompatible as they
+stand. Here too `h` and `h'` cannot both hold, but seeing that needs a lemma relating `≤` and `<`,
+so the tactic gives up. The error below is deliberate: read it in the Infoview. -/
 example (x : ℝ) (h : x ≤ 3) (h' : x > 3) : x = 42 := by
   contradiction
   done
@@ -303,12 +306,12 @@ example : ∀ x : ℝ, x ≤ x := by
 ## Exercises
 
 Every exercise below can be done with the tactics of this file — `exact`, `assumption`, `rw`,
-`rfl`, `apply`, `have`, `intro`, `contradiction` and they get harder as you go down.
+`rfl`, `apply`, `have`, `intro` and `contradiction`.
 
 Each proof is `sorry` for the moment. `sorry` is the tactic that closes any goal by asking Lean to
 take your word for it: the statement is accepted, but Lean marks it with the yellow warning
-`declaration uses 'sorry'`. Replacing every `sorry` by a real proof is the exercise, and one is
-done when its warning has gone and nothing is red.
+`declaration uses 'sorry'`. Replacing every `sorry` by a real proof is the exercise, and an
+exercise is finished when its warning has gone and nothing is red.
 
 We strongly suggest never leaving an error behind. If you want to skip an exercise, or to give up
 in the middle of one, put `sorry` back: a `sorry` is only a warning, whereas a half-written proof
@@ -438,7 +441,8 @@ theorem ex_24 (n : ℕ) (h : n ≠ n) : n = 0 := by
   done
 
 /- `Prop` is the type of mathematical statements, true or false: `P Q : Prop` reads "let `P` and
-`Q` be statements". So `h : P` means "let us assume that `P` holds, and let us call this assumption `h`". -/
+`Q` be statements". So `h : P` means "let us assume that `P` holds, and let us call this
+assumption `h`". -/
 theorem ex_25 (P Q : Prop) (h : P) (h' : ¬ P) : Q := by
   sorry
   done
