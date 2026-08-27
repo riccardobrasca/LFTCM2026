@@ -8,6 +8,7 @@ pp.unicode.fun = true # pretty-prints `fun a ↦ b`
 autoImplicit = false
 weak.linter.mathlibStandardSet = true
 linter.unusedVariables = false
+linter.unusedTactic = false
 linter.overlappingInstances = false
 linter.style.openClassical = false
 warn.classDefReducibility = false

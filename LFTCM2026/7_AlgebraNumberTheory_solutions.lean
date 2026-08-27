@@ -1,12 +1,17 @@
 import Mathlib
+
+/- # Algebra
+The goal of today's lecture is to discuss some algebraic structures: Groups, Rings and Vector
+Spaces. If time permits (and it won't) we might discuss a bit of modular arithmetic.
+-/
 section Groups
+/- ## Groups
+
+-/
 
 example {G : Type*} [Group G] (x y z : G) : x * (y * z) * (x * z)⁻¹ * (x * y * x⁻¹)⁻¹ = 1 := by
   group
 
-#print CommGroup
--- and right-clicking on it yields
-structure CommGroup_in_Cortona (G : Type*) extends Group G, CommMonoid G
 
 example {G : Type*} [CommGroup G] (x y : G) : (x * y)⁻¹ = x⁻¹ * y⁻¹ := by
   -- group
@@ -16,7 +21,6 @@ example {G : Type*} [CommGroup G] (x y : G) : (x * y)⁻¹ = x⁻¹ * y⁻¹ := 
 example {A : Type*} [AddCommGroup A] (x y : A) : x + y + 0 = x + y := by
   abel
 
--- `⌘`
 
 end Groups
 
@@ -28,18 +32,21 @@ section More
 variable (G : Type*) [Group G]
 
 -- #### Subgroups
+/- **FAE** Add the definition of subgroup + some discussion about it not being automatically a group
+Also check in file 5 that they're not used already.-/
+
 example (H : Subgroup G) : Group H := inferInstance
 
 variable (H : Subgroup G) in
 #synth Group H
 
-/- We have an automatic coercion from sets to types (more about this in the next class),
-so we get a coercion from subgroups to types: -/
+-- We have an automatic coercion from sets to types, so we get a coercion from subgroups to types:
 example (H : Subgroup G) (x : H) (hx : x = 1) : (x : G) = 1 := by
   simp [hx]
 
 example (H : Subgroup G) : 1 ∈ H := H.one_mem
 
+-- **FAE** This is important and must come up in **File 5**!!!
 /- Observe what happens if one writes
 
   `AddSubgroup ℤ :=`
@@ -92,29 +99,30 @@ example : (Subgroup.center G).Normal := by
 -- #### Homomorphisms
 
 -- @[ext]
-structure MonoidHom_AMSS (M N : Type*) [Monoid M] [Monoid N] where
+structure MonoidHom_Cortona (M N : Type*) [Monoid M] [Monoid N] where
   toFun : M → N
   map_one : toFun 1 = 1
   map_mul : ∀ (x y : M), toFun (x * y) = (toFun x) * (toFun y)
 
 
 -- Note the @[ext] tag.
-example (G H : Type*) [Group G] [Group H] (f g : MonoidHom_AMSS G H)
+example (G H : Type*) [Group G] [Group H] (f g : MonoidHom_Cortona G H)
     (H : ∀ x, f.toFun x = g.1 x) : f = g := by -- the `f.toFun` and `g.1` are horrible!
   cases f
   cases g
-  simp only [MonoidHom_AMSS.mk.injEq]
--- #print MonoidHom_AMSS.mk.injEq
+  simp only [MonoidHom_Cortona.mk.injEq]
+-- #print MonoidHom_Cortona.mk.injEq
   ext -- x
   apply H
 
 #check MonoidHom.ext
 
-def f : MonoidHom_AMSS (ℕ × ℕ) ℕ where
+def f : MonoidHom_Cortona (ℕ × ℕ) ℕ where
   toFun p := p.1 * p.2
   map_one := by simp only [Prod.fst_one, Prod.snd_one, mul_one]
   map_mul _ _ := by simp only [Prod.fst_mul, Prod.snd_mul]; group
 
+-- **FAE** This is perhaps too much
 #check f ⟨2,3⟩ -- we can't apply a `MonoidHom₁` to an element, which is annoying
 
 
@@ -129,10 +137,10 @@ functions.-/
 
 
 instance {G H : Type*} [Monoid G] [Monoid H] :
-    CoeFun (MonoidHom_AMSS G H) (fun _ ↦ G → H) where
-  coe := MonoidHom_AMSS.toFun
+    CoeFun (MonoidHom_Cortona G H) (fun _ ↦ G → H) where
+  coe := MonoidHom_Cortona.toFun
 
--- attribute [coe] MonoidHom_AMSS.toFun
+-- attribute [coe] MonoidHom_Cortona.toFun
 #check f ⟨2,3⟩
 
 -- whatsnew in
@@ -152,61 +160,61 @@ example (A : Type*) [AddGroup A] (f : A →+ ℤ) (hf : 1 ∈ f.range) : Surject
 
 -- `⌘`
 
--- #### Quotients
-
-#print Setoid
-#print Equivalence
-#print Quotient
-
-variable (H : Subgroup G)
-
-#print QuotientGroup.leftRel
-#check QuotientGroup.leftRel H
-#check (QuotientGroup.mk' _ : [_? : H.Normal] → G →* G ⧸ H)
-
--- `simpa` & `refine` for `↔`
-example (N : Subgroup G) [N.Normal] (x y : G) : (x : G ⧸ N) = (y : G ⧸ N) ↔ x * y⁻¹ ∈ N := by
-  refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · rw [QuotientGroup.eq] at h
-    rw [← inv_inv x, ← mul_inv_rev]
-    apply Subgroup.inv_mem
-    rwa [Subgroup.Normal.mem_comm_iff]
-    assumption
-  · rw [QuotientGroup.eq, ← inv_inv y, ← mul_inv_rev]
-    apply Subgroup.inv_mem
-    simpa [Subgroup.Normal.mem_comm_iff]
-
-
-/- Class type inference makes Lean understand that since `H` is
-commutative, `N` is normal and thus `H ⧸ N` is a group. -/
-example (H : Type*) [CommGroup H] (f : H →* G) (N : Subgroup H) (hN : N ≤ f.ker) :
-    {g : H ⧸ N →* G // ∀ h : H, f h = g h } := by
-  set g := QuotientGroup.lift N f hN with hg -- `set ... with`!
-  use g
-  intro h
-  rw [hg]
-  simp only [QuotientGroup.lift_mk]
-
-example [H.Normal] (K : Subgroup G) : Subgroup (G ⧸ H) where
-  carrier := QuotientGroup.mk '' K
-  one_mem' := by
-    simp only [Set.mem_image, SetLike.mem_coe, QuotientGroup.eq_one_iff]
-    use 1
-    constructor-- <;>
-    · exact K.one_mem
-    · exact H.one_mem
-    -- apply one_mem
-  mul_mem' := by
-    rintro a b ⟨x, hxa, rfl⟩ ⟨y, hyb, rfl⟩
-    exact ⟨x * y, K.mul_mem hxa hyb, rfl⟩
-  inv_mem' /- {g} -/ := by
-    rintro g ⟨x, ⟨hx, rfl⟩⟩
-    -- simp only [Set.mem_image, SetLike.mem_coe]
-    use x⁻¹
-    exact ⟨K.inv_mem hx, rfl⟩
-
-example [H.Normal] (K : Subgroup G) : Subgroup (G ⧸ H) := K.map (QuotientGroup.mk' H)
-example [H.Normal] (K : Subgroup G) : Subgroup (G ⧸ H) := K.map (QuotientGroup.mk H)
+-- -- #### Quotients
+--
+-- #print Setoid
+-- #print Equivalence
+-- #print Quotient
+--
+-- variable (H : Subgroup G)
+--
+-- #print QuotientGroup.leftRel
+-- #check QuotientGroup.leftRel H
+-- #check (QuotientGroup.mk' _ : [_? : H.Normal] → G →* G ⧸ H)
+--
+-- -- `simpa` & `refine` for `↔`
+-- example (N : Subgroup G) [N.Normal] (x y : G) : (x : G ⧸ N) = (y : G ⧸ N) ↔ x * y⁻¹ ∈ N := by
+--   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
+--   · rw [QuotientGroup.eq] at h
+--     rw [← inv_inv x, ← mul_inv_rev]
+--     apply Subgroup.inv_mem
+--     rwa [Subgroup.Normal.mem_comm_iff]
+--     assumption
+--   · rw [QuotientGroup.eq, ← inv_inv y, ← mul_inv_rev]
+--     apply Subgroup.inv_mem
+--     simpa [Subgroup.Normal.mem_comm_iff]
+--
+--
+-- /- Class type inference makes Lean understand that since `H` is
+-- commutative, `N` is normal and thus `H ⧸ N` is a group. -/
+-- example (H : Type*) [CommGroup H] (f : H →* G) (N : Subgroup H) (hN : N ≤ f.ker) :
+--     {g : H ⧸ N →* G // ∀ h : H, f h = g h } := by
+--   set g := QuotientGroup.lift N f hN with hg -- `set ... with`!
+--   use g
+--   intro h
+--   rw [hg]
+--   simp only [QuotientGroup.lift_mk]
+--
+-- example [H.Normal] (K : Subgroup G) : Subgroup (G ⧸ H) where
+--   carrier := QuotientGroup.mk '' K
+--   one_mem' := by
+--     simp only [Set.mem_image, SetLike.mem_coe, QuotientGroup.eq_one_iff]
+--     use 1
+--     constructor-- <;>
+--     · exact K.one_mem
+--     · exact H.one_mem
+--     -- apply one_mem
+--   mul_mem' := by
+--     rintro a b ⟨x, hxa, rfl⟩ ⟨y, hyb, rfl⟩
+--     exact ⟨x * y, K.mul_mem hxa hyb, rfl⟩
+--   inv_mem' /- {g} -/ := by
+--     rintro g ⟨x, ⟨hx, rfl⟩⟩
+--     -- simp only [Set.mem_image, SetLike.mem_coe]
+--     use x⁻¹
+--     exact ⟨K.inv_mem hx, rfl⟩
+--
+-- example [H.Normal] (K : Subgroup G) : Subgroup (G ⧸ H) := K.map (QuotientGroup.mk' H)
+-- example [H.Normal] (K : Subgroup G) : Subgroup (G ⧸ H) := K.map (QuotientGroup.mk H)
 
 -- `⌘`
 
@@ -311,11 +319,37 @@ lemma span_equotient {I : Ideal R} (S : Set (R ⧸ I)) (x : R) (hx : ⟦x⟧ ∈
 
 end Rings
 
+section VectorSpaces
+
+/- We all agree that, at the end of the day, a vector space `V` over a field `K` is just a
+`K`-module, but it is much better to call it a *`K`-vector space* rather than *`K`-module`...
+
+Except that we **don't agree**.
+-/
+
+#check VectorSpace
+#check vectorSpace
+#check Vectorspace
+#check Module
+
+
+end VectorSpaces
 -- **FAE** Add something about `ℤ/nℤ` just for fun and to justify the "Number Theory"?
 
 end More
 
 section Exercises
+
+
+
+/- **FAE**: Not sure this is the right place, perhaps put in 7?
+**¶ Exercise**
+Why is the following example broken? Fix its statement, then prove it. -/
+example (G : Type*) [Group G] (H₁ H₂ : Subgroup G) : Subgroup (H₁ ∩ H₂) := sorry
+/- **Sol.:** The error comes come the fact that "being a subgroup" is not a proposition. It is the
+definition of some term! A solution would be -/
+example (G : Type*) [Group G] (H₁ H₂ : Subgroup G) : Subgroup (G) where
+  carrier := H₁ ∩ H₂
 
 
 end Exercises
