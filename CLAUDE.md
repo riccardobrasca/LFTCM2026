@@ -150,13 +150,16 @@ example : ... := by
 
 It is redundant — the proof is already complete without it — and that is the point: for a beginner
 it marks the end of the proof explicitly, and while editing it gives an error exactly when goals
-are still open, instead of the mistake surfacing somewhere further down the file. `lakefile.toml`
-therefore turns off `linter.unusedTactic`, which would otherwise warn "`done` does nothing" on
-every proof. Add `done` to proofs you write, and do not delete the ones already there.
+are still open, instead of the mistake surfacing somewhere further down the file. The
+`linter.unusedTactic` linter, which would otherwise warn "`done` does nothing" on every proof, is
+off — see below. Add `done` to proofs you write, and do not delete the ones already there.
 
-`lakefile.toml` sets `autoImplicit = false` and silences the `unusedVariables`, `unusedTactic`,
-`overlappingInstances`, and `style.openClassical` linters — so do not "fix" warnings that these
-options deliberately turn off.
+`lakefile.toml` sets `autoImplicit = false` and, deliberately, **`linter.all = false`**: no linter
+of any kind — core or mathlib, present or future — fires in this project. The other `warn.*`
+options are off too, with a single exception: `warn.sorry` stays on, so `declaration uses 'sorry'`
+is the *only* warning a participant can ever see, and it means exactly "this exercise is still
+open". Do not "fix" warnings these options turn off, and do not re-enable a linter to tidy
+something up.
 
 Formatting (enforced by `.vscode/settings.json`, not by a linter): 2-space indent, spaces not tabs,
 100-column ruler, UTF-8, LF, final newline, no trailing whitespace.

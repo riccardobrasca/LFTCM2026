@@ -6,11 +6,19 @@ defaultTargets = ["LFTCM2026"]
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
 autoImplicit = false
-linter.unusedVariables = false
-linter.unusedTactic = false # proofs here end with `done`, which the linter calls unused
-linter.overlappingInstances = false
-linter.style.openClassical = false
+# No linter should ever fire in a participant's file: `done` at the end of every proof would set
+# off `linter.unusedTactic`, unused hypotheses in exercise statements `linter.unusedVariables`, and
+# so on. This turns off every linter at once, core and mathlib, present and future.
+linter.all = false
+# The one warning we do want to keep: `declaration uses 'sorry'` is how a participant sees that an
+# exercise is still open. It is on by default, and set here so that the intention is on record.
+warn.sorry = true
+# The other warnings Lean can emit outside the linter framework. None of them can show up in an
+# exercise file, but no warning except the one above should ever reach a participant.
 warn.classDefReducibility = false
+warn.exposeOnPrivate = false
+warn.redundantExpose = false
+warn.refl_coherence = false
 maxSynthPendingDepth = 3
 
 [[require]]
