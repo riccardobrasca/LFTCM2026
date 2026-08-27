@@ -55,8 +55,8 @@ Two things in that sentence do deserve a comment now:
   general you can hover the cursor over a symbol and VS Code will tell you how to type it. The
   LaTeX command is a good guess.
 
-The keyword `by` starts the proof, and `done` ends it (it's technically not needed, but when you
-are starting out it is a good idea to use it).
+The keywords `by` and `done` are the delimiters of the proof: they just tell Lean that you plan to insert the proof between the line following by and the line preceding done. They are analogous to LaTeX
+\begin{proof} and \end{proof}. In particular, the fact that you write done at the end is not telling Lean that you are really "done", just explaining that what comes after done will have nothing to do with this theorem (you will see an error if the proof is not complete).
 -/
 example {X Y Z : Type*} [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
     (f : X → Y) (g : Y → Z) (hf : Continuous f) (hg : Continuous g) : Continuous (g ∘ f) := by
@@ -303,6 +303,15 @@ example : ∀ x : ℝ, x ≤ x := by
 Every exercise below can be done with the tactics of this file — `exact`, `assumption`, `rw`,
 `rfl`, `apply`, `have`, `intro`, `contradiction` and they get harder as you go down.
 
+Each proof is `sorry` for the moment. `sorry` is the tactic that closes any goal by asking Lean to
+take your word for it: the statement is accepted, but Lean marks it with the yellow warning
+`declaration uses 'sorry'`. Replacing every `sorry` by a real proof is the exercise, and one is
+done when its warning has gone and nothing is red.
+
+We strongly suggest never leaving an error behind. If you want to skip an exercise, or to give up
+in the middle of one, put `sorry` back: a `sorry` is only a warning, whereas a half-written proof
+is an error, and a file full of red is unpleasant to work in.
+
 Apart from the hypotheses of each statement, here is everything from Mathlib you may need. The
 letters `a`, `b`, `c` stand for arbitrary numbers.
 
@@ -426,6 +435,8 @@ theorem ex_24 (n : ℕ) (h : n ≠ n) : n = 0 := by
   sorry
   done
 
+/- `Prop` is the type of mathematical statements, true or false: `P Q : Prop` reads "let `P` and
+`Q` be statements". So `h : P` means "let us assume that `P` holds, and let us call this assumption `h`". -/
 theorem ex_25 (P Q : Prop) (h : P) (h' : ¬ P) : Q := by
   sorry
   done
@@ -452,3 +463,7 @@ theorem ex_30 {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y] (f : X →
     (hf : Continuous f) (s : Set Y) (hs : IsOpen s) : IsOpen (f ⁻¹' s) := by
   sorry
   done
+
+theorem ex_31 (f g : ℝ → ℝ) (hf : ∀ x y : ℝ, x ≤ y → f x ≤ f y)
+    (hg : ∀ x y : ℝ, x ≤ y → g x ≤ g y) : ∀ x y : ℝ, x ≤ y → (g ∘ f) x ≤ (g ∘ f) y := by
+  sorry
