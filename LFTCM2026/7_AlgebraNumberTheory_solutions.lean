@@ -150,105 +150,6 @@ example (A : Type*) [AddGroup A] (f : G →* A) : ∀ x y : G, x * y = 1 → (f 
   sorry
   done
 
---
---
--- -- Note the @[ext] tag.
--- example (G H : Type*) [Group G] [Group H] (f g : MonoidHom_Cortona G H)
---     (H : ∀ x, f.toFun x = g.1 x) : f = g := by -- the `f.toFun` and `g.1` are horrible!
---   cases f
---   cases g
---   simp only [MonoidHom_Cortona.mk.injEq]
--- -- #print MonoidHom_Cortona.mk.injEq
---   ext -- x
---   apply H
---   done
---
--- #check MonoidHom.ext
---
--- def f : MonoidHom_Cortona (ℕ × ℕ) ℕ where
---   toFun p := p.1 * p.2
---   map_one := by simp only [Prod.fst_one, Prod.snd_one, mul_one]
---   map_mul _ _ := by simp only [Prod.fst_mul, Prod.snd_mul]; group
---
--- -- **FAE** This is perhaps too much
--- #check f ⟨2,3⟩ -- we can't apply a `MonoidHom₁` to an element, which is annoying
---
---
--- #check f.toFun ⟨2,3⟩
--- #eval f.toFun ⟨2,3⟩
---
--- /- We would like to able to write `f ⟨2,3⟩` instead of `f.toFun ⟨2,3⟩`. We do this
--- using the `CoeFun` class, which is a class for objects that can be coerced into
--- functions.-/
---
--- #print CoeFun
---
---
--- instance {G H : Type*} [Monoid G] [Monoid H] :
---     CoeFun (MonoidHom_Cortona G H) (fun _ ↦ G → H) where
---   coe := MonoidHom_Cortona.toFun
---
--- -- attribute [coe] MonoidHom_Cortona.toFun
--- #check f ⟨2,3⟩
-
-
--- -- #### Quotients
---
--- #print Setoid
--- #print Equivalence
--- #print Quotient
---
--- variable (H : Subgroup G)
---
--- #print QuotientGroup.leftRel
--- #check QuotientGroup.leftRel H
--- #check (QuotientGroup.mk' _ : [_? : H.Normal] → G →* G ⧸ H)
---
--- -- `simpa` & `refine` for `↔`
--- example (N : Subgroup G) [N.Normal] (x y : G) : (x : G ⧸ N) = (y : G ⧸ N) ↔ x * y⁻¹ ∈ N := by
---   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
---   · rw [QuotientGroup.eq] at h
---     rw [← inv_inv x, ← mul_inv_rev]
---     apply Subgroup.inv_mem
---     rwa [Subgroup.Normal.mem_comm_iff]
---     assumption
---   · rw [QuotientGroup.eq, ← inv_inv y, ← mul_inv_rev]
---     apply Subgroup.inv_mem
---     simpa [Subgroup.Normal.mem_comm_iff]
---
---
--- /- Class type inference makes Lean understand that since `H` is
--- commutative, `N` is normal and thus `H ⧸ N` is a group. -/
--- example (H : Type*) [CommGroup H] (f : H →* G) (N : Subgroup H) (hN : N ≤ f.ker) :
---     {g : H ⧸ N →* G // ∀ h : H, f h = g h } := by
---   set g := QuotientGroup.lift N f hN with hg -- `set ... with`!
---   use g
---   intro h
---   rw [hg]
---   simp only [QuotientGroup.lift_mk]
---
--- example [H.Normal] (K : Subgroup G) : Subgroup (G ⧸ H) where
---   carrier := QuotientGroup.mk '' K
---   one_mem' := by
---     simp only [Set.mem_image, SetLike.mem_coe, QuotientGroup.eq_one_iff]
---     use 1
---     constructor-- <;>
---     · exact K.one_mem
---     · exact H.one_mem
---     -- apply one_mem
---   mul_mem' := by
---     rintro a b ⟨x, hxa, rfl⟩ ⟨y, hyb, rfl⟩
---     exact ⟨x * y, K.mul_mem hxa hyb, rfl⟩
---   inv_mem' /- {g} -/ := by
---     rintro g ⟨x, ⟨hx, rfl⟩⟩
---     -- simp only [Set.mem_image, SetLike.mem_coe]
---     use x⁻¹
---     exact ⟨K.inv_mem hx, rfl⟩
---
--- example [H.Normal] (K : Subgroup G) : Subgroup (G ⧸ H) := K.map (QuotientGroup.mk' H)
--- example [H.Normal] (K : Subgroup G) : Subgroup (G ⧸ H) := K.map (QuotientGroup.mk H)
-
--- `⌘`
 
 end Groups
 
@@ -315,36 +216,7 @@ example (f : R →+* S) (r : R) : IsUnit r → IsUnit (f r) := by
     · rw [← map_mul, ← H, hvu, map_one]
     · rw [← map_mul, ← H, huv, map_one]
   · simp
-
-
-
--- variable (I : Ideal R) in
--- #check Quotient.mk (Submodule.quotientRel I)
--- variable (I : Ideal R) in
--- #check Ideal.Quotient.mk I
-
--- example (I : Ideal R) (x : R) : ⟦x⟧ = Ideal.Quotient.mk I x := by
---   rfl
---
---
--- open RingHom Ideal.Quotient in
--- lemma span_equotient {I : Ideal R} (S : Set (R ⧸ I)) (x : R) (hx : ⟦x⟧ ∈ Ideal.span S) :
---     x ∈ I + Ideal.span (Quotient.out '' S) := by
---   rw [Ideal.span] at hx
---   obtain ⟨n, ι', g', hιx⟩ := (Submodule.mem_span_set' (M := R ⧸ I)).mp hx
---   -- obtain ⟨n, ι', g', hιx⟩ := (@Submodule.mem_span_set' _ (R ⧸ I) _ _ _ _ _).mp hx
---   set ι : Fin n → R := fun i ↦ Quotient.out (ι' i) with hι
---   set g : Fin n → Quotient.out '' S := fun i ↦ ⟨Quotient.out (g' i).val, by simp⟩ with hg
---   set y : Ideal.span (Quotient.out '' S) := by
---     use ∑ i, ι i • (g i)
---     exact Submodule.mem_span_set'.mpr ⟨n, ι, g, rfl⟩ with hy
---   replace hιx : ∑ i, ι' i * (g' i) = (mk I) x := by
---     exact hιx
---   have hxy : x - y ∈ I := by --restate with `mk I x` instead of `⟦x⟧`
---     simp [← mk_eq_mk_iff_sub_mem, hy, ← hιx, hι, hg]
---   rw [Submodule.add_eq_sup, Submodule.mem_sup]
---   exact ⟨x - y, hxy, y, SetLike.coe_mem .., by abel⟩
-
+  done
 
 end Rings
 
@@ -409,7 +281,49 @@ def AnnihilatorSubmodule (T : Subspace K V) : Submodule K (V →ₗ[K] W) where
 end VectorSpaces
 
 
--- **FAE** Add something about `ℤ/nℤ` just for fun and to justify the "Number Theory"?
+section ZModn
+
+/- ##ZMod
+We don't have time in this class to discuss how *quotients* are defined, but you can easily imagine
+that everything exists (and probably will have something to do with `structure`s and `class`es...)
+Just to get a feeling, here are three small examples of results in `ℤ/nℤ`. -/
+
+lemma exists_b_mul_zero (a n : ℕ) (H : ¬ Nat.Coprime a n) : ∃ b : ℕ, (a * b : (ZMod n)) = 0 := by
+  rw [Nat.Coprime, Nat.gcd_eq_one_iff] at H
+  push Not at H
+  -- obtain ⟨c, hc₁, hc₂, hc₃⟩ := H
+  obtain ⟨c, ⟨b₁, hb₁⟩, ⟨b₂, hb₂⟩, hc₁⟩ := H
+  rw [hb₁]
+  use b₂
+  rw_mod_cast [mul_assoc, mul_comm b₁, ← mul_assoc, ← hb₂]
+  rw [ZMod.natCast_eq_zero_iff]
+  use b₁
+  done
+
+example (a n : ℕ) (H : ¬ Nat.Coprime a n) : ∃ b, (a * b : ℤ ⧸ (Ideal.span {(n : ℤ)})) = 0 := by
+  obtain ⟨b, hb⟩ := exists_b_mul_zero a n H
+  use b
+  -- exact hb
+  let φ := Int.quotientSpanEquivZMod n
+  apply_fun φ
+  simpa
+
+example (a n : ℕ) (H : ¬ Nat.Coprime a n) : ∃ b : ℕ,
+    ((a * b) : ℤ ⧸ (Ideal.span {(n : ℤ)})) = 0 := by
+  suffices h : ∃ b : ℕ, Ideal.Quotient.mk (Ideal.span {(n : ℤ)}) ((a * b) : ℤ) = 0 by
+    obtain ⟨b, hb⟩ := h
+    use b
+    exact hb
+  simp_rw [Ideal.Quotient.eq_zero_iff_dvd]
+  rw [Nat.Coprime, Nat.gcd_eq_one_iff] at H
+  push Not at H
+  obtain ⟨c, ⟨b₁, hb₁⟩, ⟨b₂, hb₂⟩, hc₁⟩ := H
+  rw [hb₂, hb₁]
+  exact ⟨b₂, b₁, by grind⟩
+  done
+
+
+end ZModn
 
 
 noncomputable section Exercises
@@ -482,6 +396,11 @@ def comm_of_inv_hom (G : Type*) [Group G] (f : G →* G) (hf : ∀ x, f x = x⁻
 /- **¶ Exercise**
 Prove that the homomorphisms between commutative monoids have a structure of commutative monoid. -/
 example (M N : Type*) [CommMonoid M] [CommMonoid N] : CommMonoid (M →* N) where
+  npow_zero := by simp
+  npow_succ := by
+    intros
+    rw [Monoid.npow_succ]
+    done
   mul := by
     intro f g
     fconstructor
@@ -618,6 +537,29 @@ example (K V W : Type*) [Field K] [AddCommGroup V] [AddCommGroup W] [Module K V]
 variable (K V W : Type*) [Field K] [AddCommGroup V] [AddCommGroup W] [Module K V] [Module K W] in
 -- Ok, this exists in the library: can we understand it in detail?
 example : Module K (V →ₗ[K] W) := sorry
+
+/- For the following example, you might need `erw` which is a stronger version of `rw`, in
+case you **really really* think that `rw` should work, but it's not working. -/
+example (p q : ℤ) (hp : Prime p) (hq : Prime q) (hpq : p ≠ q) :
+    IsUnit (p : (ℤ ⧸ Ideal.span {q})) := by
+  have : IsCoprime p q := by
+    rw [hp.coprime_iff_not_dvd]
+    sorry
+    -- rw [prime_dvd_prime_iff_eq] at hpq
+  rw [IsCoprime] at this
+  obtain ⟨a, b, H⟩ := this
+  apply IsUnit.of_mul_eq_one ↑a
+  rw [← eq_sub_iff_add_eq] at H
+  rw_mod_cast [mul_comm, H]
+  erw [Int.cast_sub, Int.cast_one, Int.cast_mul, sub_eq_self, Ideal.Quotient.eq_zero_iff_dvd]
+  simp
+  done
+
+
+
+
+
+
 
 
 end Exercises
