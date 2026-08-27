@@ -132,6 +132,26 @@ example : Nplus.mul 1 1 = 2 := rfl
 example : Nplus.mul (1 : Nplus) (1 : Nplus) = (2 : Nplus) := rfl
 example : Nplus.mul (1 : ℕ) (1 : ℕ) = (2 : ℕ) := rfl
 
+/- But actually: how to *remember* the names and list of all fields in a structure? Of course
+one can have a look in the file where it is defined, but it's painful and might be very long...
+-/
+def DiscreteMetric (M : Type*) : MetricSpace M where
+  dist := sorry
+  dist_self := sorry
+  dist_comm := sorry
+  dist_triangle := sorry
+  edist_dist := sorry
+  uniformity_dist := sorry
+  cobounded_sets := sorry
+  eq_of_dist_eq_zero := sorry
+
+/- Actually, try typing just
+
+def DiscreteMetric (M : Type*) : MetricSpace M :=
+_
+
+and follow the bulb...💡️
+-/
 
 -- ## A right way to define mathematical structures
 
@@ -143,13 +163,6 @@ structure Group_in_Cortona (G : Type*) extends DivInvMonoid G where
   protected inv_mul_cancel : ∀ a : G, a⁻¹ * a = 1
 
 #print DivInvMonoid
-
--- -- whatsnew in
--- @[to_additive] -- to be uncommented later, in the `Classes` section
-lemma mul_square {G : Type*} [Group G] {x y : G} (h : x * y = 1) : x * y ^ 2 = y := by
-  rw [pow_two, ← mul_assoc, h]
-  simp
-  done
 
 -- actually `mul_assoc` does not only work for groups, yet `Lean` was happy using it! *Why?*
 #check mul_assoc
@@ -253,16 +266,6 @@ example {A : Type*} [AddGroup A] (x y : A) : x + y + 0 = x + y := by
 #print HAdd
 -- @[inherit_doc] infixl:65 " + "   => HAdd.hAdd
 
-/- Recall that we proved the
-lemma mul_square {G : Type*} [Group G] {x y : G} (h : x * y = 1) : x * y ^ 2 = y := by
-  rw [pow_two, ← mul_assoc, h]
-  rw [h]
--/
-example {A : Type*} [AddGroup A] {a b : A} (h : a + b = 0) : a + 2 • b = b := by
-  -- exact add_even h -- uncomment @[to_additive]
-  rw [two_nsmul, ← add_assoc, h]
-  simp
-  done
 
 -- What's going on here?
 example (G : Type*) [Group G] [CommGroup G] (g : G) : 1 * g = g := by
