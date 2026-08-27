@@ -9,6 +9,8 @@ module
 import Mathlib
 import LFTCM2026.Preliminaries
 
+open Real
+
 /-!
 
 If you want to go further than what we can cover here, the Lean community keeps a list of books,
@@ -467,3 +469,24 @@ theorem ex_30 {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y] (f : X →
 theorem ex_31 (f g : ℝ → ℝ) (hf : ∀ x y : ℝ, x ≤ y → f x ≤ f y)
     (hg : ∀ x y : ℝ, x ≤ y → g x ≤ g y) : ∀ x y : ℝ, x ≤ y → (g ∘ f) x ≤ (g ∘ f) y := by
   sorry
+
+/- Here is a different way of writing calculatory proofs, using the `calc` syntax. Don't worry too
+much about it, just replace the `sorry` by full proofs.
+
+You may use here the following results from mathlib:
+*`exp_add : exp (x + y) = exp x * exp y`.
+* `two_mul a : 2 * a = a + a`.
+*`add_add_add_comm a b c d : a + b + (c + d) = a + c + (b + d)`.
+* `pow_two a : a ^ 2 = a * a`. -/
+theorem ex_32 (a b c : ℝ) (h : a = b + c) : exp (2 * a) = (exp b) ^ 2 * (exp c) ^ 2 := by
+  calc
+    exp (2 * a) = exp (2 * (b + c))                 := by
+                sorry
+              _ = exp ((b + b) + (c + c))           := by
+                sorry
+              _ = exp (b + b) * exp (c + c)         := by
+                sorry
+              _ = (exp b * exp b) * (exp c * exp c) := by
+                sorry
+              _ = (exp b) ^ 2 * (exp c)^2           := by
+                sorry
