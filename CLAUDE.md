@@ -169,10 +169,11 @@ Formatting (enforced by `.vscode/settings.json`, not by a linter): 2-space inden
 Two files decide what a participant actually encounters, and both need a thought when adding
 material:
 
-- `.vscode/settings.json` `files.exclude` hides everything from the VS Code explorer except the
-  exercise files and `Test.lean` — build output, project plumbing, `.github`, `.claude`, `img`,
-  `*.md` (`CLAUDE.md` included), and the whole `Preliminaries` tree. A new file that participants
-  should *not* see goes on that list.
+- `.vscode/settings.json` `files.exclude` hides from the VS Code explorer everything participants
+  have no business opening — build output, project plumbing, `.github`, `.claude`, `img`,
+  `CLAUDE.md`/`AGENTS.md`, `README.md`, and the whole `Preliminaries` tree. Markdown is not hidden
+  as a class, though: the exercise sheet `Esercizi.md` is listed nowhere and is meant to be
+  visible. A new file that participants should not see goes on that list.
 - `README.md` is the installation and troubleshooting guide participants follow. It is in good
   shape; leave it alone unless the workflow it describes actually changes.
 

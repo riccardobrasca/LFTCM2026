@@ -21,7 +21,7 @@
         "lake-manifest.json": true,
         "lean-toolchain": true,
         "LICENSE": true,
-        "*.md": true,
+        "README.md": true,
         "img": true,
         "LFTCM2026.lean": true,
         // Helper files participants should not need to open
