@@ -34,7 +34,7 @@ the intended state during the workshop, not a defect to clean up.
 
 ### Exercise files — participant-facing, one per talk/session
 
-These are what beginners read during the conference. `LFTCM2026/BasicTactic.lean` is the model.
+These are what beginners read during the conference. `LFTCM2026/1_BasicTactic.lean` is the model.
 
 - **Imported from nowhere. Never add one to `LFTCM2026.lean`.** Nothing else in the repository may
   mention them.
@@ -49,7 +49,7 @@ These are what beginners read during the conference. `LFTCM2026/BasicTactic.lean
   Anything the speaker will say anyway, and anything the participant can read off the Infoview,
   does not need to be written down. A file drowning in prose is harder to follow along with than a
   sparse one.
-  - The heavily commented first example of `LFTCM2026/BasicTactic.lean` is the right amount for a
+  - The heavily commented first example of `LFTCM2026/1_BasicTactic.lean` is the right amount for a
     *first* contact with tactics, where every symbol is new. It is the ceiling, not the norm: for
     the rest of that file and for later sessions, comment noticeably more lightly.
   - When in doubt, cut. Err on the side of too little; the speaker fills the gap, and whoever
@@ -172,13 +172,13 @@ material:
 - `.vscode/settings.json` `files.exclude` hides from the VS Code explorer everything participants
   have no business opening — build output, project plumbing, `.github`, `.claude`, `img`,
   `CLAUDE.md`/`AGENTS.md`, `README.md`, and the whole `Preliminaries` tree. Markdown is not hidden
-  as a class, though: the exercise sheet `Esercizi.md` is listed nowhere and is meant to be
+  as a class, though: the exercise sheet `Exercises.md` is listed nowhere and is meant to be
   visible. A new file that participants should not see goes on that list.
 - `README.md` is the installation and troubleshooting guide participants follow. It is in good
   shape; leave it alone unless the workflow it describes actually changes.
 
 Note that the repository root and the source directory are both called `LFTCM2026`, so the path of
-an exercise file looks doubled (`LFTCM2026/LFTCM2026/BasicTactic.lean` from outside the project).
+an exercise file looks doubled (`LFTCM2026/LFTCM2026/1_BasicTactic.lean` from outside the project).
 That is correct, and it is the same confusion the README warns participants about when they open
 the wrong folder in VS Code.
 
