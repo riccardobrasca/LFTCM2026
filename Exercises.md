@@ -1,8 +1,9 @@
 # Exercises
 
-Choose some of the following exercises, with the goal of proving them in Lean by the end of the
-week. Don't worry if right now you don't even know how to *state* them: deciding what the formal
-statement should look like is a large part of the work, and it is the part you will get better soon.
+Choose some of the following exercises, with the goal of proving them in Lean **by the end of the
+week**. Don't worry if right now you don't even know how to *state* them: deciding what the formal
+statement should look like is a large part of the work, and it is the part you will soon get better
+at.
 
 Each exercise carries two numbers, from 1 to 10:
 
@@ -13,7 +14,8 @@ Each exercise carries two numbers, from 1 to 10:
 The two are independent. Some exercises are painful to state and then proved by a single lemma
 from Mathlib; others are one line to state and take an afternoon to prove. A low *proving* score
 often means "Mathlib already knows this", in which case the exercise is really about searching
-the library, which is a skill worth practising.
+the library, which is a skill worth practising. Of course, you are also welcome to try to find
+the proof yourself!
 
 ---
 
@@ -50,7 +52,7 @@ finite family is a function out of `Fin k`.
 Let `(a_n)` be a real sequence converging to `L`, and let `φ : ℕ → ℕ` be strictly increasing.
 Prove that the subsequence `(a_φ(n))` converges to `L` as well.
 
-**Stating: 3. Proving: 2.** You can spell convergence out with `ε` and `N`, or use Mathlib's
+**Stating: 4. Proving: 2.** You can spell convergence out with `ε` and `N`, or use Mathlib's
 `Filter.Tendsto`. Do it both ways: the first is the definition you know, the second is the one the
 library speaks, and seeing the same proof in both languages is the point of the exercise.
 
@@ -60,8 +62,9 @@ Let `P : V → V` be a linear map with `P ∘ P = P`. Prove that
 
 > `V = ker P ⊕ im P`.
 
-**Stating: 5. Proving: 4.** The interesting question is how to say "`⊕`" for two subspaces of a
-given space.
+**Stating: 6. Proving: 4.** The interesting question is how to say "`⊕`" for two subspaces of a
+given space. Mind also that `P ∘ P` has to be the composition of *linear maps*: write it as plain
+function composition and `ker` no longer makes sense.
 
 ## 6. Subgroups of cyclic groups
 
@@ -78,7 +81,7 @@ Let `a < b` be real numbers and let `f : [a, b] → [a, b]` be continuous, diffe
 
 > `1/f'(x) + 1/f'(y) = 2`.
 
-**Stating: 6. Proving: 7.**
+**Stating: 4. Proving: 7.**
 
 ## 8. The partial sums of `sin k` are bounded
 
@@ -110,7 +113,7 @@ subgroup `H` of cardinality `d`.
 
 Prove that a group is never the union of two proper subgroups.
 
-**Stating: 4. Proving: 3.** Think about how to phrase "is the union of" — probably as a hypothesis
+**Stating: 4. Proving: 2.** Think about how to phrase "is the union of" — probably as a hypothesis
 that every element lies in one of the two, with the conclusion that one of them is everything.
 The proof is three lines and uses no theory at all.
 
