@@ -7,7 +7,19 @@ All the files needed during the talks are in the subfolder `LFTCM2026`.
 
 ## Repository contents
 
-TBA
+The files used during the talks are in the subfolder `LFTCM2026`, one per session, named after the
+topic and numbered in the order they are presented: `1_BasicTactic.lean`, `2_Logic.lean`, and so
+on. The same folder also contains `Test.lean`, which is only there to check that your installation
+works (see below).
+
+Not all of them are there yet: each speaker writes their own file, and several will be added
+shortly before the workshop. Run `git pull` (see [Update the repository](#update-the-repository))
+to get the new ones.
+
+For the same reason, if you want to have a look at a file that is already there before the
+workshop, **work on a copy of it**: the author may still modify it, and a `git pull` would then
+overwrite your work. Copying the file inside the `LFTCM2026` folder and renaming it (for example
+`1_BasicTactic_mine.lean`) is enough.
 
 ## Installation
 
