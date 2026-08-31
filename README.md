@@ -93,7 +93,11 @@ takes about 8 GB, on top of roughly 3 GB for Lean itself.
 
   ![5](img/5.png)
 
-* If you see a blue squiggle under `#eval`, Lean is running correctly.
+* If you see a blue squiggle under `#eval`, and the `Lean Infoview` panel on the right says
+  `No goals` when you put the cursor just after `by simp` on the last line, Lean is running
+  correctly.
+
+  ![6](img/6.png)
 
 ### Update the repository
 
