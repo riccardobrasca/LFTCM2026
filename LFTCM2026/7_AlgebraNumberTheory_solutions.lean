@@ -532,26 +532,34 @@ example (K V W : Type*) [Field K] [AddCommGroup V] [AddCommGroup W] [Module K V]
     rwa [← sub_eq_zero, ← map_sub, ← f.mem_ker, h, Submodule.mem_bot, sub_eq_zero] at H
 
 
-
 -- **¶ Exercise**
 variable (K V W : Type*) [Field K] [AddCommGroup V] [AddCommGroup W] [Module K V] [Module K W] in
--- Ok, this exists in the library: can we understand it in detail?
-example : Module K (V →ₗ[K] W) := sorry
+/- Ok, this exists in the library: can we understand it in detail? In other words: write it
+down by hand after understanding what all this is about. -/
+example : SMul K (V →ₗ[K] W) := by
+  constructor
+  intro c f
+  exact {
+  toFun := fun v ↦ c • f v
+  map_add' v w := by simp
+  map_smul' x v := by rw [map_smul, RingHom.id_apply, smul_comm]}
 
-/- For the following example, you might need `erw` which is a stronger version of `rw`, in
-case you **really really* think that `rw` should work, but it's not working. -/
-example (p q : ℤ) (hp : Prime p) (hq : Prime q) (hpq : p ≠ q) :
-    IsUnit (p : (ℤ ⧸ Ideal.span {q})) := by
-  have : IsCoprime p q := by
-    rw [hp.coprime_iff_not_dvd]
-    sorry
-    -- rw [prime_dvd_prime_iff_eq] at hpq
-  rw [IsCoprime] at this
+
+
+-- **¶ Exercise**
+/- For the following exercise, you might need `erw` which is a stronger version of `rw`, in
+case you **really really* think that `rw` should work, but it's not working. Similarly, consider
+the tactic `rw_mod_cast` when you want to rewrite something but some `↑` is preventing you. All in
+all, the exercise is a bit of a fight around the problem that `ℕ` and `ℤ` differ. -/
+example (p q : ℕ) (hp : Nat.Prime p) (hq : Nat.Prime q) (hpq : p ≠ q) :
+    IsUnit (p : (ℤ ⧸ Ideal.span {(q : ℤ)})) := by
+  have : Nat.Coprime p q := (Nat.coprime_primes hp hq).mpr hpq
+  rw [← Nat.isCoprime_iff_coprime, IsCoprime] at this
   obtain ⟨a, b, H⟩ := this
   apply IsUnit.of_mul_eq_one ↑a
-  rw [← eq_sub_iff_add_eq] at H
-  rw_mod_cast [mul_comm, H]
-  erw [Int.cast_sub, Int.cast_one, Int.cast_mul, sub_eq_self, Ideal.Quotient.eq_zero_iff_dvd]
+  apply_fun (Ideal.Quotient.mk (Ideal.span {(q : ℤ)})) at H
+  simp only [eq_intCast, Int.cast_add, Int.cast_mul, Int.cast_natCast, Int.cast_one] at H
+  erw [mul_comm, ← H, left_eq_add, Ideal.Quotient.eq_zero_iff_dvd]
   simp
   done
 
