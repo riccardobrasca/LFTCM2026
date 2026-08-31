@@ -343,134 +343,134 @@ Topology:
 * `continuous_def : Continuous f ↔ ∀ s, IsOpen s → IsOpen (f ⁻¹' s)`
 -/
 
-theorem ex_1 (x y : ℝ) (hx : 0 < x) (h : x < y) : x < y := by
+theorem basic_ex_1 (x y : ℝ) (hx : 0 < x) (h : x < y) : x < y := by
   sorry
   done
 
-theorem ex_2 (x y : ℝ) (h : x < y) : x ≤ y := by
+theorem basic_ex_2 (x y : ℝ) (h : x < y) : x ≤ y := by
   sorry
   done
 
-theorem ex_3 (a b : ℕ) (h1 : a ≤ b) (h2 : b ≤ a) : a = b := by
+theorem basic_ex_3 (a b : ℕ) (h1 : a ≤ b) (h2 : b ≤ a) : a = b := by
   sorry
   done
 
-theorem ex_4 (x y z : ℝ) (h1 : x ≤ y) (h2 : y ≤ z) (h3 : z ≤ x) : y ≤ z := by
+theorem basic_ex_4 (x y z : ℝ) (h1 : x ≤ y) (h2 : y ≤ z) (h3 : z ≤ x) : y ≤ z := by
   sorry
   done
 
-theorem ex_5 (a b : ℕ) (h : a = b) : b = a := by
+theorem basic_ex_5 (a b : ℕ) (h : a = b) : b = a := by
   sorry
   done
 
-theorem ex_6 (a b c : ℕ) (h1 : a = b) (h2 : b = c) : a = c := by
+theorem basic_ex_6 (a b c : ℕ) (h1 : a = b) (h2 : b = c) : a = c := by
   sorry
   done
 
-theorem ex_7 (x : ℝ) : x * 1 + 0 = x := by
+theorem basic_ex_7 (x : ℝ) : x * 1 + 0 = x := by
   sorry
   done
 
-theorem ex_8 (x y : ℝ) (h : x = y) : x + 0 = y := by
+theorem basic_ex_8 (x y : ℝ) (h : x = y) : x + 0 = y := by
   sorry
   done
 
-theorem ex_9 (x y : ℝ) (h : y = x) (h' : y ≤ 0) : x ≤ 0 := by
+theorem basic_ex_9 (x y : ℝ) (h : y = x) (h' : y ≤ 0) : x ≤ 0 := by
   sorry
   done
 
-theorem ex_10 (x y : ℝ) (h : x = y) (h' : x ≤ 3) : y ≤ 3 := by
+theorem basic_ex_10 (x y : ℝ) (h : x = y) (h' : x ≤ 3) : y ≤ 3 := by
   sorry
   done
 
-theorem ex_11 : 5 * 5 = 25 := by
+theorem basic_ex_11 : 5 * 5 = 25 := by
   sorry
   done
 
-theorem ex_12 {X : Type*} (x : X) : id x = x := by
+theorem basic_ex_12 {X : Type*} (x : X) : id x = x := by
   sorry
   done
 
-theorem ex_13 {X Y Z W : Type*} (f : X → Y) (g : Y → Z) (h : Z → W) (x : X) :
+theorem basic_ex_13 {X Y Z W : Type*} (f : X → Y) (g : Y → Z) (h : Z → W) (x : X) :
     (h ∘ g ∘ f) x = h (g (f x)) := by
   sorry
   done
 
-theorem ex_14 (x y : ℝ) (h : x < y) : x ≤ y := by
+theorem basic_ex_14 (x y : ℝ) (h : x < y) : x ≤ y := by
   sorry
   done
 
-theorem ex_15 (x y : ℝ) (hx : 0 < x) (hy : 0 < y) : 0 < x + y := by
+theorem basic_ex_15 (x y : ℝ) (hx : 0 < x) (hy : 0 < y) : 0 < x + y := by
   sorry
   done
 
-theorem ex_16 (x y : ℝ) (hx : 0 < x) (hy : 0 < y) : 0 < x * y := by
+theorem basic_ex_16 (x y : ℝ) (hx : 0 < x) (hy : 0 < y) : 0 < x * y := by
   sorry
   done
 
-theorem ex_17 (a b : ℕ) (h1 : a ≤ b) (h2 : b ≤ a) : a = b := by
+theorem basic_ex_17 (a b : ℕ) (h1 : a ≤ b) (h2 : b ≤ a) : a = b := by
   sorry
   done
 
-theorem ex_18 (x y z : ℝ) (h1 : x ≤ y) (h2 : y < z) : x < z := by
+theorem basic_ex_18 (x y z : ℝ) (h1 : x ≤ y) (h2 : y < z) : x < z := by
   sorry
   done
 
-theorem ex_19 (x y z : ℝ) (h1 : x < y) (h2 : y < z) : x ≤ z := by
+theorem basic_ex_19 (x y z : ℝ) (h1 : x < y) (h2 : y < z) : x ≤ z := by
   sorry
   done
 
-theorem ex_20 (x y z w : ℝ) (h1 : x < y) (h2 : y < z) (h3 : z < w) : x < w := by
+theorem basic_ex_20 (x y z w : ℝ) (h1 : x < y) (h2 : y < z) (h3 : z < w) : x < w := by
   sorry
   done
 
-theorem ex_21 (x y : ℝ) (hx : 0 ≤ x) (hy : 0 ≤ y) : 0 ≤ x * y + x := by
+theorem basic_ex_21 (x y : ℝ) (hx : 0 ≤ x) (hy : 0 ≤ y) : 0 ≤ x * y + x := by
   sorry
   done
 
-theorem ex_22 (x y : ℝ) (h : x = y) (h' : y + 0 ≤ 3) : x ≤ 3 := by
+theorem basic_ex_22 (x y : ℝ) (h : x = y) (h' : y + 0 ≤ 3) : x ≤ 3 := by
   sorry
   done
 
-theorem ex_23 (x : ℝ) (h : x < 0) (h' : ¬ x < 0) : x = 7 := by
+theorem basic_ex_23 (x : ℝ) (h : x < 0) (h' : ¬ x < 0) : x = 7 := by
   sorry
   done
 
-theorem ex_24 (n : ℕ) (h : n ≠ n) : n = 0 := by
+theorem basic_ex_24 (n : ℕ) (h : n ≠ n) : n = 0 := by
   sorry
   done
 
 /- `Prop` is the type of mathematical statements, true or false: `P Q : Prop` reads "let `P` and
 `Q` be statements". So `h : P` means "let us assume that `P` holds, and let us call this
 assumption `h`". -/
-theorem ex_25 (P Q : Prop) (h : P) (h' : ¬ P) : Q := by
+theorem basic_ex_25 (P Q : Prop) (h : P) (h' : ¬ P) : Q := by
   sorry
   done
 
-theorem ex_26 (x y : ℝ) (h : x = y) (h' : x ≠ y) : x = 0 := by
+theorem basic_ex_26 (x y : ℝ) (h : x = y) (h' : x ≠ y) : x = 0 := by
   sorry
   done
 
-theorem ex_27 (x y : ℝ) : x = y → y ≤ x := by
+theorem basic_ex_27 (x y : ℝ) : x = y → y ≤ x := by
   sorry
   done
 
-theorem ex_28 : ∀ x : ℝ, 0 ≤ x → 0 ≤ x + 0 := by
+theorem basic_ex_28 : ∀ x : ℝ, 0 ≤ x → 0 ≤ x + 0 := by
   sorry
   done
 
-theorem ex_29 (P : Prop) (hP : P) : ¬ (¬ P) := by
+theorem basic_ex_29 (P : Prop) (hP : P) : ¬ (¬ P) := by
   sorry
   done
 
 /- Hint: Rewriting with `continuous_def` turns `Continuous f` into the statement about preimages of
 open sets, as in the very first example of this file. -/
-theorem ex_30 {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y] (f : X → Y)
+theorem basic_ex_30 {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y] (f : X → Y)
     (hf : Continuous f) (s : Set Y) (hs : IsOpen s) : IsOpen (f ⁻¹' s) := by
   sorry
   done
 
-theorem ex_31 (f g : ℝ → ℝ) (hf : ∀ x y : ℝ, x ≤ y → f x ≤ f y)
+theorem basic_ex_31 (f g : ℝ → ℝ) (hf : ∀ x y : ℝ, x ≤ y → f x ≤ f y)
     (hg : ∀ x y : ℝ, x ≤ y → g x ≤ g y) : ∀ x y : ℝ, x ≤ y → (g ∘ f) x ≤ (g ∘ f) y := by
   sorry
 
@@ -482,7 +482,7 @@ You may use here the following results from mathlib:
 * `two_mul a : 2 * a = a + a`.
 *`add_add_add_comm a b c d : a + b + (c + d) = a + c + (b + d)`.
 * `pow_two a : a ^ 2 = a * a`. -/
-theorem ex_32 (a b c : ℝ) (h : a = b + c) : exp (2 * a) = (exp b) ^ 2 * (exp c) ^ 2 := by
+theorem basic_ex_32 (a b c : ℝ) (h : a = b + c) : exp (2 * a) = (exp b) ^ 2 * (exp c) ^ 2 := by
   calc
     exp (2 * a) = exp (2 * (b + c))                 := by
                 sorry
