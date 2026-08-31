@@ -10,27 +10,14 @@ section Examples
 
 
 example {G : Type*} [CommGroup G] (N : Subgroup G) : CommGroup (G ⧸ N) := by
-  constructor --we'll see later why it appears here
-  intro a b
-  obtain ⟨a', ha'⟩ := QuotientGroup.mk'_surjective N a
-  obtain ⟨b', hb'⟩ := QuotientGroup.mk'_surjective N b
-  rw [← ha', ← hb'/- , QuotientGroup.mk'_apply, QuotientGroup.mk'_apply-/]
-  simp only [QuotientGroup.mk'_apply]
-  apply CommGroup.mul_comm
-  -- exact QuotientGroup.Quotient.commGroup N
+  sorry
   done
 
 /- `Lean` is not so stupid after all, it understands that metric spaces have a topology...
 but how is this possible? -/
 example {X Y : Type*} [MetricSpace X] [MetricSpace Y] [Group Y] [IsTopologicalGroup Y]
     (f g h : X → Y) : Continuous f → Continuous g → Continuous h → Continuous (f * g / h) := by
-  intro hf hg hh
-  apply Continuous.div'
-  · apply Continuous.mul
-    · exact hf
-    exact hg
-  · exact hh
-  -- fun_prop
+  sorry
   done
 
 /- Can you understand the error message (I'm not asking whether you understand *why* you get
@@ -48,7 +35,7 @@ def quotComm_def {G : Type*} [Group G] (N : Subgroup G) : Group (G ⧸ N) := by
 #print continuous_fst
 example (X Y : Type*) [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace (X × Y)] :
     Continuous (fun p : X × Y ↦ p.1) := by
-  exact continuous_fst
+  sorry
   done
 
 
@@ -85,11 +72,7 @@ structure WrongGroup where
 -- If this is how we play with products and inverses, we'd rather give up with `Lean` altogether...
 lemma WrongGroup.inv_eq_of_mul {α : WrongGroup} (x y : α.carrier) :
     α.mul x y = α.one → α.inv x = y := by
-  intro h
-  apply_fun (fun z ↦ α.mul (α.inv x) z) at h
-      -- use the `apply_fun` tactic to apply a function to both sides of a hypothesis
-  rw [α.mul_one, ← α.mul_assoc, α.inv_mul_cancel, α.one_mul] at h
-  exact h.symm
+  sorry
   done
 
 structure WrongSemigroup where
@@ -100,24 +83,22 @@ structure WrongSemigroup where
 -- A `lemma` saying that `a * ((b * c) * d = (a * b) * (c * d)`
 lemma assoc_mul (X : WrongSemigroup) (a b c d : X.carrier) :
     X.mul a (X.mul (X.mul b c) d) = X.mul (X.mul a b) (X.mul c d) := by
-  rw [X.mul_assoc]
-  rw [X.mul_assoc]
+  sorry
   done
 
 /- If something is true in a Semigroup, it will stay so in a group; so the above `lemma` should
 still hold; yet...-/
 lemma assoc_mul' (G : WrongGroup) (a b c d : G.carrier) :
     G.mul a (G.mul (G.mul b c) d) = G.mul (G.mul a b) (G.mul c d) := by
-  -- apply assoc_mul -- it does not work!
-  simp [G.mul_assoc]
+  sorry
   done
 
 /- Just to finish convincing ourselves that this `WrongXXX` approach is *wrong*, let's try to
 check that the usual addition makes `ℕ` into a `(Wrong)Semigroup`. -/
 def Nplus : WrongSemigroup where
-  carrier := ℕ
-  mul := (· + ·) -- or fun x y ↦ x + y
-  mul_assoc := add_assoc
+  carrier := sorry
+  mul := sorry
+  mul_assoc := sorry
 
 example : Nplus.mul 1 1 = 2 := rfl
 example : Nplus.mul (1 : Nplus) (1 : Nplus) = (2 : Nplus) := rfl
@@ -141,13 +122,7 @@ structure Group_in_Cortona (G : Type*) extends DivInvMonoid G where
 #print Iff
 
 example (P Q : Prop) : P ∧ Q → ((P → Q) ↔ (Q → P)) := by
-  -- tauto
-  · rintro ⟨hP, hQ⟩
-    constructor
-    · --tauto
-      intro hPQ hQ'
-      exact hP
-    · exact fun _ _ ↦ hQ
+  sorry
   done
 
 /- But how to *remember* the names and list of all fields in a structure? Of course
@@ -187,7 +162,7 @@ example (G : Type*) [Group G] (x y z : G) : x * y * z * 1 = x * (y * z) * 1 := b
 lemma OneOne_Cortona {A : Type*} [Monoid A] (a : A) : a * 1 * 1 = a := by simp
 
 example {F : Type*} [NormedField F] (x : F) : x * 1 * 1 = x := by
-  exact OneOne_Cortona x
+  sorry
   done
 
 /-`Classes` are special `structures`, for which certain terms are stored in a database.
@@ -219,7 +194,7 @@ def ℂ_Cortona := ℂ
 #print One
 #synth One ℤ
 
-example : AddGroup (ℤ × ℚ) := inferInstance
+example : AddGroup (ℤ × ℚ) := sorry
 
 -- Since finding instances is "automatic", the search can be used to create new ones:
 variable (X Y : Type) [TopologicalSpace X] [TopologicalSpace Y] in
@@ -256,7 +231,7 @@ variable (ι : Type*) (X : ι → Type*) [(i : ι) → MetricSpace (X i)]
 
 
 example {A : Type*} [AddGroup A] (x y : A) : x + y + 0 = x + y := by
-  simp only [add_zero] -- when does `add_zero` hold?
+  sorry
   done
 
 #print HAdd
@@ -265,13 +240,13 @@ example {A : Type*} [AddGroup A] (x y : A) : x + y + 0 = x + y := by
 
 -- What's going on here?
 example (G : Type*) [Group G] [CommGroup G] (g : G) : 1 * g = g := by
-  rw [one_mul]
+  sorry
   done
 
 instance : Add Bool where
   add b₁ b₂ := b₁ && b₂
 
-example : true + false = false := by rfl
+example : true + false = false := by sorry
 
 end Classes
 
@@ -284,8 +259,6 @@ section Exercises
 -- throws an error?
 example (M : Type*) (α : Monoid M) : (1 : M) = (1 : M) := rfl
 example (α : Type*) (M : Monoid α) : (1 : M) = (1 : M) := rfl
-/- **Sol.:** The second equality does not make sense because `M` is a structure, so a collection of
-many fields, not a type that can/cannot contain a term like `1`. -/
 
 open Function
 
@@ -293,7 +266,7 @@ open Function
 Re-experience the pain of playing with *wrongly-defined* groups. -/
 lemma WrongGroup.mul_inv_cancel {α : WrongGroup} (x : α.carrier) :
     α.mul x (α.inv x) = α.one := by
-  rw [← α.inv_mul_cancel (α.inv x), α.inv_eq_of_mul _ _ (α.inv_mul_cancel x)]
+  sorry
   done
 
 /- **¶ Exercise**
@@ -307,11 +280,7 @@ what a subgroup is, let alone a normal one, it can be useful to -/
 
 example (A : Type*) [AddGroup A] (H K : AddSubgroup A) :
     H.Normal → K.Normal → (H ⊓ K).Normal := by
-  -- apply AddSubgroup.normal_inf_normal
-  intro hH hK
-  constructor
-  rintro n ⟨hnH, hnK⟩ g
-  exact ⟨hH.conj_mem n hnH g, hK.conj_mem n hnK g⟩
+  sorry
   done
 
 /- **¶ Exercise**
@@ -321,65 +290,17 @@ collection of "opens", satisfying no intersection/union property but just obeyin
 that the empty set and the universal set belong to the collection. -/
 
 -- **1** Define the structure of a Cortological space on a type `X`: should this be a class?
-/- *Sol.:* : Yes, it should be a class, and here it is. -/
-class CortologicalSpace (X : Type) where
-  opens : Set (Set X)
-  univ : Set.univ ∈ opens
-  empty : ∅ ∈ opens
 
 /- **2** Put a Cortological structure on `ℕ`, declaring that a non-empty set is "open" if it
 contains arbitrarily large elements, and then prove that the intersection of two opens is open:-/
-/- *Sol.:* -/
-def contains_arbitrarily_large (S : Set ℕ) : Prop := ∃ N, ∀ a, N ≤ a → a ∈ S
 
-instance : CortologicalSpace ℕ where
-  opens := {∅} ∪ Set.ofPred contains_arbitrarily_large
-  univ := by simp [contains_arbitrarily_large]
-  empty := by simp
-
-open CortologicalSpace in
-example (X Y : Set ℕ) : X ∈ opens → Y ∈ opens → X ∩ Y ∈ opens := by
-  intro hX hY
-  -- rcases (Set.mem_union _ _ _).mpr hX with _ | ⟨N, hN⟩
-  -- · simp_all
-  -- rcases (Set.mem_union _ _ _).mpr hY with _ | ⟨M, hM⟩
-  -- · simp_all
-  -- right
-  -- use max M N
-  -- intro a ha
-  -- exact ⟨hN a (by grind), hM a (by grind)⟩
-  rcases (Set.mem_union _ _ _).mpr hX, (Set.mem_union _ _ _).mpr hY with
-    ⟨_ | ⟨N, hN⟩, _ | ⟨M, hM⟩⟩ <;> try simp_all
-  right
-  use max M N
-  grind
-  done
-
-
-open CortologicalSpace
 /- **3** Make sure that if `X` and `Y` are both `CortologicalSpaces`, Lean automatically puts a
 structure of `CortologicalSpace` on `X × Y`: I'm not asking any relation among this structure
 and the starting structures whatsoever... (remember that this is a *toy model*!): -/
 
-instance (X Y : Type) [CortologicalSpace X] [CortologicalSpace Y] : CortologicalSpace (X × Y) where
-  opens := {.univ } ∪ {∅}
-  univ := by simp
-  empty := by simp
-
 /- **4** Define the structure of punctured cortological spaces and discuss advantages and
 disadvantages of making it a class (think at the product of two punctured Cortological spaces). -/
-/- *Sol.:* -/
-class PuncturedCortologicalSpace (X : Type) extends CortologicalSpace X where
-  pt : X
 
-/- Against the choice of making it a class, there is the remark that many Cortological Spaces can be
-"punctured" in several ways, and we don't want Lean to automatically pick up a point; on the other
-hand, if we make it a class, we can automatically deduce a structure of
-  `PuncturedCortologicalSpace X × Y` by -/
-open PuncturedCortologicalSpace in
-instance (X Y : Type) [PuncturedCortologicalSpace X] [PuncturedCortologicalSpace Y] :
-  PuncturedCortologicalSpace (X × Y) where
-    pt := (pt, pt)
 
 /- **¶ Exercise**
 Given a multiplicative group `G` and an additive group `A`, what is the right way of putting a
@@ -390,41 +311,6 @@ how this multiplication behaves, and then providing the final instance (where yo
 need to provide *all* fields, as some can be deduced automatically: try to comment them to see when
 `Lean` complains).
 -/
-
-/- *Sol.:* -/
-def AddMul_mul {G A : Type*} [Group G] [AddGroup A] : (G × A) → (G × A) → (G × A) :=
-  fun ⟨g, a⟩ ⟨h, b⟩ ↦ ⟨g * h, a + b⟩
-
-instance {G A : Type*} [Group G] [AddGroup A] : Mul (G × A) where
-  mul := AddMul_mul
-
-lemma AddMul_mul_def {G A : Type*} [Group G] [AddGroup A] (g h : G) (a b : A) :
-    (⟨g, a⟩ : G × A) * ⟨h, b⟩ = ⟨g * h, a + b⟩ := rfl
-
-instance {G A : Type*} [Group G] [AddGroup A] : Group (G × A) where
-  mul := AddMul_mul
-  mul_assoc := by
-    rintro ⟨g, a⟩ ⟨h, b⟩ ⟨k, c⟩
-    grind [AddMul_mul_def]
-    done
-  one := ⟨1, 0⟩
-  one_mul := by
-    rintro ⟨g, a⟩
-    rw [AddMul_mul_def]
-    simp only [Prod.mk.injEq, mul_eq_right, add_eq_right]
-    constructor <;> rfl
-    done
-  mul_one a := by
-    rw [AddMul_mul_def]
-    ext <;> simp <;> rfl
-    done
-  inv := fun ⟨g, a⟩ ↦ ⟨g⁻¹, -a⟩
-  inv_mul_cancel := by
-    rintro ⟨g, a⟩
-    rw [AddMul_mul_def]
-    simp only [inv_mul_cancel, neg_add_cancel]
-    rfl
-    done
 
 
 end Exercises

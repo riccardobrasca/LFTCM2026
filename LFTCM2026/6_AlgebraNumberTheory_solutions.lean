@@ -1,9 +1,10 @@
 import Mathlib
 
-/- # Algebra
+/- # Algebra (and Number Theory)
 The goal of today's lecture is to discuss some algebraic structures: (Sub)Groups, Rings and Vector
 Spaces. If time permits (and it won't) we might discuss a bit of modular arithmetic.
 -/
+
 section Groups
 
 /- ## Groups
@@ -11,12 +12,12 @@ We've already seen in the last lecture how to *define* groups. Let's see how to 
 -/
 
 example {G : Type*} [Group G] (x y z : G) : x * (y * z) * (x * z)⁻¹ * (x * y * x⁻¹)⁻¹ = 1 := by
-  group
+  group -- this works for **free groups**
   done
 
 
 example {G : Type*} [CommGroup G] (x y : G) : (x * y)⁻¹ = x⁻¹ * y⁻¹ := by
-  -- group -- the Group is commutative!
+  -- group -- the group is commutative!
   rw [mul_inv_rev, mul_comm]
   -- rw [mul_inv]
   done
@@ -28,7 +29,7 @@ example {A : Type*} [AddCommGroup A] (x y : A) : x + y + 0 = x + y := by
 /- All this is very nice, but are we *duplicating* the whole library for both additive and
 multiplicative groups? -/
 -- -- whatsnew in
--- @[to_additive] -- to be uncommented later, in the `Classes` section
+-- @[to_additive]
 lemma mul_square {G : Type*} [Group G] {x y : G} (h : x * y = 1) : x * y ^ 2 = y := by
   rw [pow_two, ← mul_assoc, h]
   simp
@@ -83,6 +84,7 @@ example (H : Subgroup G) (x : H) (hx : x = 1) : (x : G) = 1 := by -- are the two
 
 example (H : Subgroup G) : 1 ∈ H := H.one_mem
 
+-- Let's define `2ℤ` as a term of `Subgroup ℤ`... (almost doable!)
 example : AddSubgroup ℤ where
   carrier := {n : ℤ | Even n}
   add_mem' := by
@@ -191,8 +193,8 @@ example (R : Type*) [CommRing R] (x y : R) : (x + y) ^ 2 = x ^ 2 + 2 * x * y + y
 lemma sixth_pow (R : Type*) [CommRing R] (x y : R) : (x + y) ^ 6 =
     x ^ 6 + 6 * x ^ 5 * y +  15 * x ^ 4 * y ^ 2 + 20 * x ^ 3 * y ^ 3 +
       15 * x ^ 2 * y ^ 4 + 6 * x * y ^ 5 + y ^ 6 := by
-  -- grind
   -- exact?
+  -- grind
   ring
   done
 
@@ -200,6 +202,7 @@ lemma sixth_pow (R : Type*) [CommRing R] (x y : R) : (x + y) ^ 6 =
 example (R : Type*) [CommRing R] (x y : R) (H : x ^ 2 ≠ y ^ 2) : x ≠ y := by
   -- ring
   grind
+  done
 
 variable {R S : Type*} [CommRing R] [CommRing S]
 
@@ -236,7 +239,8 @@ Except that we **don't agree**.
 variable (K : Type*) [Field K]
 #print Module --it's a class
 
-variable (V : Type*) /- [AddCommGroup V]  -/[Module K V] --but it *requires* that `V` be a(n additive, commutative) group:
+variable (V : Type*) /- [AddCommGroup V]  -/[Module K V]
+--it *requires* that `V` be a(n additive, commutative) group:
 
 
 example (T : Submodule K V) (x y : V) (c : K) : x ∈ T → y ∈ T →
@@ -262,10 +266,11 @@ example (f : K →ₗ[K] K) : ∃ c, f = (fun x ↦ c • x) := by --what is goi
 /- Let's try to state that "the collection of linear maps from `V` to `W` that vanish on a
 subspace `T ≤ V` form a linear/vector subspace of all linear maps.
 -/
-variable (V : Type*) [AddCommGroup V] [Module K V] in
+variable (W : Type*) [AddCommGroup W] [Module K W] in
 -- theorem Annihilator_Submodule (T : Subspace K V) :
 --   Submodule K {f : V →ₗ[K] W | ∀ x ∈ T, f x = 0} := sorry
--- **Indeed**: it must be a `def`: note, in passing, that Lean accepts that `(V →ₗ[K] W)` is a module
+/- **Indeed**: it must be a `def`: note, in passing, that Lean accepts that `(V →ₗ[K] W)`
+  is a module. -/
 def AnnihilatorSubmodule (T : Subspace K V) : Submodule K (V →ₗ[K] W) where
   carrier := {f : V →ₗ[K] W | ∀ x ∈ T, f x = 0}
   add_mem' {f g} hf hg x hx := by
@@ -307,6 +312,7 @@ example (a n : ℕ) (H : ¬ Nat.Coprime a n) : ∃ b, (a * b : ℤ ⧸ (Ideal.sp
   let φ := Int.quotientSpanEquivZMod n
   apply_fun φ
   simpa
+  done
 
 example (a n : ℕ) (H : ¬ Nat.Coprime a n) : ∃ b : ℕ,
     ((a * b) : ℤ ⧸ (Ideal.span {(n : ℤ)})) = 0 := by
@@ -543,7 +549,7 @@ example : SMul K (V →ₗ[K] W) := by
   toFun := fun v ↦ c • f v
   map_add' v w := by simp
   map_smul' x v := by rw [map_smul, RingHom.id_apply, smul_comm]}
-
+  done
 
 
 -- **¶ Exercise**
@@ -562,12 +568,6 @@ example (p q : ℕ) (hp : Nat.Prime p) (hq : Nat.Prime q) (hpq : p ≠ q) :
   erw [mul_comm, ← H, left_eq_add, Ideal.Quotient.eq_zero_iff_dvd]
   simp
   done
-
-
-
-
-
-
 
 
 end Exercises
