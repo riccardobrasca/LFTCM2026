@@ -396,6 +396,7 @@ theorem basic_ex_13 {X Y Z W : Type*} (f : X → Y) (g : Y → Z) (h : Z → W) 
   sorry
   done
 
+/- Same statement as exercise 2: prove it with `apply` this time. -/
 theorem basic_ex_14 (x y : ℝ) (h : x < y) : x ≤ y := by
   sorry
   done
@@ -408,6 +409,7 @@ theorem basic_ex_16 (x y : ℝ) (hx : 0 < x) (hy : 0 < y) : 0 < x * y := by
   sorry
   done
 
+/- Same statement as exercise 3: prove it with `apply` this time. -/
 theorem basic_ex_17 (a b : ℕ) (h1 : a ≤ b) (h2 : b ≤ a) : a = b := by
   sorry
   done
@@ -473,14 +475,15 @@ theorem basic_ex_30 {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y] (f :
 theorem basic_ex_31 (f g : ℝ → ℝ) (hf : ∀ x y : ℝ, x ≤ y → f x ≤ f y)
     (hg : ∀ x y : ℝ, x ≤ y → g x ≤ g y) : ∀ x y : ℝ, x ≤ y → (g ∘ f) x ≤ (g ∘ f) y := by
   sorry
+  done
 
 /- Here is a different way of writing calculatory proofs, using the `calc` syntax. Don't worry too
 much about it, just replace the `sorry` by full proofs.
 
-You may use here the following results from mathlib:
-*`exp_add : exp (x + y) = exp x * exp y`.
+You may use here the following results from Mathlib:
+* `exp_add : exp (x + y) = exp x * exp y`.
 * `two_mul a : 2 * a = a + a`.
-*`add_add_add_comm a b c d : a + b + (c + d) = a + c + (b + d)`.
+* `add_add_add_comm a b c d : a + b + (c + d) = a + c + (b + d)`.
 * `pow_two a : a ^ 2 = a * a`. -/
 theorem basic_ex_32 (a b c : ℝ) (h : a = b + c) : exp (2 * a) = (exp b) ^ 2 * (exp c) ^ 2 := by
   calc
