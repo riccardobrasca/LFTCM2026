@@ -10,7 +10,8 @@ All the files needed during the talks are in the subfolder `LFTCM2026`.
 The files used during the talks are in the subfolder `LFTCM2026`, one per session, named after the
 topic and numbered in the order they are presented: `1_BasicTactic.lean`, `2_Logic.lean`, and so
 on. The same folder also contains `Test.lean`, which is only there to check that your installation
-works (see below).
+works (see below). The exercise sheet `Exercises.md`, in the root folder, lists longer exercises to
+work on during the whole week.
 
 Not all of them are there yet: each speaker writes their own file, and several will be added
 shortly before the workshop. Run `git pull` (see [Update the repository](#update-the-repository))
@@ -136,8 +137,8 @@ To restart a previous codespace, go to [https://github.com/codespaces/](https://
 
 ## Troubleshooting
 
-If you get the error `unknown package 'Mathlib'` and a red squiggle under `import Mathlib.Tactic`,
-you probably didn't open the right folder.
+If the `import` lines at the top of the file have a red squiggle, with an error such as
+`unknown package 'Mathlib'`, you probably didn't open the right folder.
 
 * Make sure you used `File > Open Folder` (*not* `File > Open File`) and selected the root folder
   `LFTCM2026` (or the name you chose during the installation). That folder contains another folder

@@ -34,7 +34,7 @@ Prove that there is no function `f : ℕ → ℕ` such that
 
 > `f(f(n)) = n + 2027` for every `n ∈ ℕ`.
 
-Bonus: prove that the analogue statement with `2026` is false.
+Bonus: prove that the analogous statement with `2026` is false.
 
 **Stating: 2. Proving: 8.** The statement is a one-liner; the proof is not.
 
@@ -130,8 +130,8 @@ cancellations.
 
 ## 13. Symmetric and antisymmetric matrices
 
-Prove that the space of `n × n` matrices decomposes as the direct sum of the subspace of symmetric
-matrices and the subspace of antisymmetric ones.
+Prove that the space of real `n × n` matrices decomposes as the direct sum of the subspace of
+symmetric matrices and the subspace of antisymmetric ones.
 
 **Stating: 6. Proving: 5.** As in exercise 5, the question is how to say "direct sum" — either
 with two subspaces, or by saying that every matrix splits as a sum of a symmetric and an
@@ -148,8 +148,8 @@ right hypotheses and then find the lemma.
 
 ## 15. Antisymmetric matrices are singular
 
-Let `n` be a positive integer and let `H` be an antisymmetric `n × n` matrix. Prove that `H` is not
-invertible.
+Let `n` be a positive integer and let `H` be a real antisymmetric `n × n` matrix. Prove that `H` is
+not invertible.
 
 **Stating: 3. Proving: 3.** Careful: as stated this is *false* for `n` even — find a `2 × 2`
 counterexample first, then prove the odd case. Formalising a counterexample is itself a useful
