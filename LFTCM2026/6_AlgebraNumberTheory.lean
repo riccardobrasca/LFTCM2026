@@ -1,3 +1,11 @@
+/-
+Copyright (c) 2026 Filippo A. E. Nuccio. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Filippo A. E. Nuccio
+-/
+
+module
+
 import Mathlib
 
 /- # Algebra (and Number Theory)
@@ -192,10 +200,11 @@ variable (K : Type*) [Field K]
 variable (V : Type*) /- [AddCommGroup V]  -/[Module K V]
 --it *requires* that `V` be a(n additive, commutative) group:
 
+-- The line above fails, so it declares nothing: here is the correct version, for what follows.
+variable (V : Type*) [AddCommGroup V] [Module K V]
 
 example (T : Submodule K V) (x y : V) (c : K) : x ∈ T → y ∈ T →
   c * x + y ∈ T := sorry -- **why this does not work?**
-  done
 
 
 example (f : K →ₗ[K] K) : ∃ c, f = (fun x ↦ c • x) := by --what is going on?
