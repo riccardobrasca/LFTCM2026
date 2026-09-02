@@ -49,9 +49,5 @@
     "files.readonlyInclude": {
         "**/.elan/**": true,
         "**/.lake/**": true
-    },
-    "cSpell.words": [
-        "Kock",
-        "Lawvere"
-    ]
+    }
 }
