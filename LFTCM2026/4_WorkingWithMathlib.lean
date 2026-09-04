@@ -28,31 +28,34 @@ there?". The answer is very often yes, and the real difficulty is finding the *n
 Our running example: for integers `a`, `b` and `c`, `a - b + c = a + (c - b)`.
 This is surely in Mathlib. How do we find it?
 
-Everything in section 1 and section 2 works offline. The commands of sections 3, 4 and 5 send your
-query to a server, so they need an internet connection: they run when Lean elaborates the line, and
-the answers appear in the Infoview when you put the cursor on it. Clicking on an answer replaces
-the query by it. If one of them shows a red `Could not contact ... server` instead, the server was
-just slow to answer: it is not a mistake in the file. Edit the line, or choose `Restart File` in
-the `∀` menu, to send the query again.
+Sections 1 and 2 work offline. The `#leansearch` and `#loogle` commands in sections 3–5 send queries
+to external servers when Lean elaborates them. Put the cursor on a query to see the answers in the
+Infoview; clicking a suggestion replaces the query with a `#check` command.
+
+A connection or response error can mean that the network or server is unavailable. Retry later,
+or comment out the query and continue with the offline tools. Online results may use a different
+Mathlib version: always check the suggested name and statement in this project.
 -/
 
 /-!
 ### 1. Guessing the name
 
-Names in Mathlib are not chosen at random: they *describe the statement*, read from left to right.
-Each ingredient contributes a word:
+Names in Mathlib usually *describe the statement*. Useful ingredients include:
 
 * operations: `add`, `sub`, `mul`, `div`, `neg`, `inv`, `pow`, `abs`, `sqrt`, ...;
 * relations: `eq`, `le`, `lt`, `ne`, `dvd`, `mem`, `subset`, ...;
 * qualifiers: `comm`, `assoc`, `left`, `right`, `self`, `cancel`, `zero`, `one`, `nonneg`, `pos`,
   ...
 
-Types and structures are `UpperCamelCase` (`Finset`, `Continuous`, `LinearIndependent`), everything
-else is `lower_snake_case`, and results about `Foo` live in the namespace `Foo`, so their full name
-is `Foo.bar`. The convention is documented at
+Types and predicates use `UpperCamelCase` (`Finset`, `Continuous`, `LinearIndependent`), while
+theorem names use `snake_case` (`add_comm`). Other definitions use `lowerCamelCase`, as in
+`Submodule.spanFinrank`; these words keep their internal capitals in theorem names too.
+Results often live in a namespace, as in `Nat.factorial_pos`. Two other useful patterns are
+`conclusion_of_hypothesis` and `property_iff_characterization`. The conventions are documented at
 <https://leanprover-community.github.io/contribute/naming.html>.
 
-`#check` prints the statement attached to a name.
+`#check` prints the type or statement attached to a name. Use Go to Definition (`F12`) on the name
+to read its source and discover nearby lemmas.
 -/
 
 -- `a + b = b + a`: an addition, commuted.
@@ -79,11 +82,11 @@ the completions shows it immediately: the statement is an inequality, and the na
 /-!
 ### 2. Asking Lean: `exact?`, `apply?`, `simp?`
 
-Lean can search its own library. These are search *tools*, not proof steps: they are slow, so once
-you have the answer, click on the suggestion in the Infoview to replace the tactic by it.
+These tactics search the imported library and suggest proof steps. Searching can be slow: in a
+finished proof, click the suggestion in the Infoview to replace the search with the proof it found.
 -/
 
-/- `exact?` looks for a single lemma, applied to the hypotheses, that closes the goal. -/
+/- `exact?` looks for a proof using library lemmas and the local hypotheses. -/
 example (a b c : ℤ) : a - b + c = a + (c - b) := by
   exact?
   done
@@ -95,8 +98,8 @@ example (n : ℕ) : 0 < n ! := by
 /- A continuous function on a compact set attains its minimum. In Mathlib the conclusion is
 written with `IsMinOn`: `IsMinOn f s x` says that `f x ≤ f y` for every `y ∈ s`.
 
-Here `exact?` fails, and it is right to: as stated, the statement is false for `s` empty. Note that
-the error message suggests trying `apply?`. -/
+Here the error is intentional: the statement is false when `s` is empty. The error message suggests
+trying `apply?`. In general, a failed search does *not* mean that the statement is false. -/
 example {X : Type*} [TopologicalSpace X] {s : Set X} {f : X → ℝ} (hs : IsCompact s)
     (hf : ContinuousOn f s) : ∃ x ∈ s, IsMinOn f s x := by
   exact?
@@ -106,21 +109,23 @@ example {X : Type*} [TopologicalSpace X] {s : Set X} {f : X → ℝ} (hs : IsCom
 but it contains `refine IsCompact.exists_isMinOn hs ?_ hf`, with `s.Nonempty` as the remaining
 goal: the assumption our statement was missing. A search that fails is informative too.
 
-`apply?` applies nothing itself: after printing the list it closes the goal with `sorry`, which is
-why this example carries a warning, and why writing `sorry` after it would be an error. -/
+Here `apply?` admits the goal with `sorry` after printing its partial suggestions. This is not a
+completed proof: choose a suggestion and prove its remaining goals. -/
 example {X : Type*} [TopologicalSpace X] {s : Set X} {f : X → ℝ} (hs : IsCompact s)
     (hf : ContinuousOn f s) : ∃ x ∈ s, IsMinOn f s x := by
   apply?
   done
 
-/- With the assumption in place, `exact?` closes the goal immediately. -/
+/- Inspect the lemma, add the missing assumption, and use it. Try `exact?` here as well. -/
+#check IsCompact.exists_isMinOn
+
 example {X : Type*} [TopologicalSpace X] {s : Set X} {f : X → ℝ} (hs : IsCompact s)
     (hne : s.Nonempty) (hf : ContinuousOn f s) : ∃ x ∈ s, IsMinOn f s x := by
-  exact?
+  exact IsCompact.exists_isMinOn hs hne hf
   done
 
-/- `simp?` behaves like `simp` and prints the lemmas it used. It is the fastest way to learn the
-names of the elementary simplification lemmas. -/
+/- `simp?` simplifies the goal and suggests a `simp only [...]` proof listing the lemmas it used.
+It is useful for discovering simplification lemmas. -/
 example (a b : ℤ) : a - b + b = a := by
   simp?
   done
@@ -137,11 +142,13 @@ it must end with `.` or `?`.
 
 #leansearch "The sum of the first n natural numbers is n(n+1)/2."
 
-/- The answer to the previous query, used. Mathlib states it for a sum over
-`Finset.range n = {0, ..., n - 1}`, so we apply it to `n + 1` and tidy up the result. -/
+/- Look for `Finset.sum_range_id`. It sums over `Finset.range n = {0, ..., n - 1}`, so we use
+`n + 1`, simplify `(n + 1) - 1`, and exchange the factors. -/
+#check Finset.sum_range_id
+
 example (n : ℕ) : ∑ i ∈ Finset.range (n + 1), i = n * (n + 1) / 2 := by
   rw [Finset.sum_range_id]
-  grind
+  rw [Nat.add_sub_cancel, Nat.mul_comm] -- `grind` works too
   done
 
 /-!
@@ -179,13 +186,15 @@ In a finite-dimensional vector space, a linearly independent family has at most 
 elements.
 -/
 
-#leansearch "A linearly independent family is smaller than the dimension of the space."
+#leansearch "The cardinality of a linearly independent family is at most the dimension."
 
 #loogle LinearIndependent, Module.finrank
-
-/- Both give `LinearIndependent.fintype_card_le_finrank`. -/
+grind
+/- Look for `LinearIndependent.fintype_card_le_finrank`. Compare its hypotheses with ours:
+Mathlib often states a more general result than the one we need. -/
 #check LinearIndependent.fintype_card_le_finrank
 
+-- `hv.fintype_card_le_finrank` is dot notation for `LinearIndependent.fintype_card_le_finrank hv`.
 example {K V ι : Type*} [Field K] [AddCommGroup V] [Module K V] [FiniteDimensional K V]
     [Fintype ι] (v : ι → V) (hv : LinearIndependent K v) :
     Fintype.card ι ≤ Module.finrank K V := by
@@ -195,7 +204,8 @@ example {K V ι : Type*} [Field K] [AddCommGroup V] [Module K V] [FiniteDimensio
 /-!
 ### Exercises
 
-Each of the following is in Mathlib. Find its name and replace the `sorry` by it.
+Each result is in Mathlib. Find a suitable lemma, inspect it with `#check`, and replace `sorry`
+with a proof using it. Check which arguments and hypotheses the lemma needs.
 -/
 
 theorem mathlib_ex1 (x : ℝ) (hx : 0 ≤ x) : Real.sqrt x ^ 2 = x := by
@@ -235,8 +245,8 @@ In Lean every object has a type, and a set is always a set of elements of a *fix
 type `X`, the sets of elements of `X` form the type `Set X`. A set of natural numbers is a
 `Set ℕ`, a set of real numbers is a `Set ℝ`, and there is no "set of everything" containing both.
 
-The fundamental way to write a set is the set-builder notation `{x : X | ...}`: the set of the
-elements of `X` satisfying the property written after the `|`.
+In fact, `Set X` is defined as `X → Prop`: a set is a predicate on `X`. Set-builder notation
+`{x : X | ...}` describes the elements satisfying the property after the `|`.
 -/
 
 -- The set of even natural numbers, as a `def` so that we can reuse it below.
@@ -251,8 +261,7 @@ example : 10 ∈ Evens := by
 
 def Reals01 : Set ℝ := {x : ℝ | 0 ≤ x ∧ x ≤ 1}
 
--- `Evens : Set ℕ` and `Reals01 : Set ℝ` have different types, so they cannot interact: their
--- union is not a well-formed expression. Uncomment the line to see the error.
+-- A union needs two sets of the same type. Uncomment the line to see the error.
 -- #check Evens ∪ Reals01
 
 /- Union `∪` (`\cup`) and intersection `∩` (`\cap`) we already know from the logic session:
@@ -323,24 +332,22 @@ theorem mathlib_ex7 {X : Type*} (A : Set X) : A ∩ ∅ = ∅ := by
 Here is a theorem one might meet in a first-year linear-algebra course: two distinct planes
 through the origin in `ℝ³` intersect in a line.
 
-The statement looks quite different in Mathlib. A vector of `ℝ³` is a function `Fin 3 → ℝ`, and a
-linear subspace is a `Submodule`. The intersection of two subspaces is written `⊓` and their sum
-`⊔`. The dimension is the delicate point, and realizing which notion to use is the real difficulty
-here: `Module.finrank` takes a *type*, so applying it to a submodule means coercing the
-submodule to the type of its elements first. What measures the submodule itself, with no coercion,
-is `Submodule.spanFinrank`, the minimal number of generators.
-So “the intersection is a line” becomes `(U ⊓ W).spanFinrank = 1`.
+We represent `ℝ³` by `Fin 3 → ℝ`: a vector assigns a real coordinate to each of the three indices.
+A linear subspace is a `Submodule`, which packages a set together with its closure properties.
+For submodules, `U ≤ W` means inclusion, `U ⊓ W` is intersection, and `U ⊔ W` is their sum
+(not their set-theoretic union). Type `⊓` with `\inf` and `⊔` with `\sup`.
 
-The proof is the familiar dimension argument. Grassmann's formula gives
-`dim (U ∩ W) ≥ 2 + 2 - 3 = 1`, and since `U ≠ W` the intersection is a proper subspace of `U`, so
-`dim (U ∩ W) < 2`. For `ℝ³` itself, a type rather than a submodule, the dimension is again
-`Module.finrank`. Every Mathlib lemma used below can be found with the tools of Part 1, and the
-natural-number arithmetic is left to `omega`.
+We will use `U.spanFinrank`, which takes the submodule directly. For these finite-dimensional
+real subspaces it is the minimal number of generators, hence the same dimension. Thus “the
+intersection is a line” becomes `(U ⊓ W).spanFinrank = 1`.
 
-Mathlib states those dimension lemmas for `Module.finrank` only, so the `spanFinrank` versions we
-need are missing. This is what usually happens when one formalizes something: on the way one runs
-into a few trivial lemmas that nobody has written yet. Here they are proved in
-`LFTCM2026/Preliminaries/SpanFinrank.lean`.
+Grassmann's formula gives `dim (U ∩ W) ≥ 2 + 2 - 3 = 1`. Since the two planes have the same
+dimension but are distinct, their intersection is a proper subspace of `U`, so its dimension is
+less than `2`. The tactic `omega` combines these bounds using natural-number arithmetic.
+
+In our Mathlib version the dimension lemmas below use `Module.finrank`. Their `spanFinrank`
+versions are short wrappers supplied by `Preliminaries`, already imported above. This is a common
+part of formalization: finding a theorem, then adapting it to the representation we chose.
 -/
 
 example (U W : Submodule ℝ (Fin 3 → ℝ))
@@ -357,7 +364,9 @@ example (U W : Submodule ℝ (Fin 3 → ℝ))
   have h_not_le : ¬ U ≤ W := by
     intro hle
     apply hne
-    exact Submodule.eq_of_le_of_spanFinrank_eq hle (by rw [hU, hW])
+    apply Submodule.eq_of_le_of_spanFinrank_eq hle
+    rw [hU, hW]
+    done
   -- So `U ⊓ W` is a proper subspace of `U`, and its dimension is smaller.
   have h_lt : U ⊓ W < U := inf_lt_left.mpr h_not_le
   have h_inf : (U ⊓ W).spanFinrank < U.spanFinrank :=
@@ -368,11 +377,21 @@ example (U W : Submodule ℝ (Fin 3 → ℝ))
 /-!
 ## Exercises: translating mathematics into Mathlib
 
-For each exercise, write a Lean declaration which expresses the English statement. The aim is
-only to formulate the result: finish the declaration with a proof such as `by sorry done` and do
-not try to prove it. You may use everything imported by `Mathlib`.
+Choose statements from subjects you know; the later exercises are a menu, not a required sequence.
+Write an `example` expressing each statement, ending with this placeholder proof:
 
-The difficulty rating concerns finding the right Mathlib vocabulary, not proving the theorem.
+```lean
+:= by
+  sorry
+  done
+```
+
+Only formulate the result; leave the proof as `sorry`. First choose the types and structures,
+then the hypotheses, then the conclusion. For example, `{R : Type*} [CommRing R]` introduces a
+commutative ring. Search for unfamiliar vocabulary and inspect candidate declarations with `#check`.
+
+The difficulty rating concerns Mathlib vocabulary, not proofs. A statement with no errors may
+still say the wrong thing: read it back in English and compare its assumptions and conclusion.
 -/
 
 /-!
@@ -413,7 +432,7 @@ and only if `a` and `n` are coprime.
 /-!
 ### 5. Monotone functions and intervals — difficulty 2/5
 
-Let `f` be an increasing function between two ordered sets. State that `f` maps the closed interval
+Let `f` be a monotone (nondecreasing) function between ordered sets. State that `f` maps the closed
 `[a, b]` into the closed interval `[f(a), f(b)]`.
 -/
 
