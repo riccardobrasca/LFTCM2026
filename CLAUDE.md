@@ -120,11 +120,18 @@ construction no exercise file is compiled, so **a green CI means exactly "`Preli
 `Test` compile"** — it says nothing about the sessions. Exercise files are checked by whoever writes
 them, in the editor.
 
-**Do not run `lake build` or `lake exe cache get` yourself.** A build that misses the cache
-recompiles mathlib and takes hours. Make the edit, say it is unverified, and let the user build.
-To check a file without a full build, use the Lean LSP tools (`lean_diagnostic_messages`,
-`lean_goal`) against the running language server — this works on exercise files too, even though
-nothing ever builds them.
+**Running `lake build` is fine, and checking a change with it is expected.** With the mathlib cache
+in place it compiles `Preliminaries` and `Test` and nothing else, so it takes seconds. Keep it
+bounded, as the global instructions require (`timeout 300 lake build`), and prefer the narrowest
+target that actually checks the change.
+
+The one thing to stay away from is a build with no cache: that recompiles mathlib and takes hours.
+If the cache is missing or the mathlib pin has moved, stop and say so rather than starting it —
+`lake exe cache get!` is several GB and is the user's call.
+
+To check a file without building, use the Lean LSP tools (`lean_diagnostic_messages`, `lean_goal`)
+against the running language server — this works on exercise files too, even though nothing ever
+builds them.
 
 ## Lean conventions in this repo
 
