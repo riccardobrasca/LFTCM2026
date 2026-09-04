@@ -189,7 +189,7 @@ elements.
 #leansearch "The cardinality of a linearly independent family is at most the dimension."
 
 #loogle LinearIndependent, Module.finrank
-grind
+
 /- Look for `LinearIndependent.fintype_card_le_finrank`. Compare its hypotheses with ours:
 Mathlib often states a more general result than the one we need. -/
 #check LinearIndependent.fintype_card_le_finrank
