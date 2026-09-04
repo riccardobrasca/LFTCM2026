@@ -21,6 +21,8 @@ They are all the same one-line argument: rewrite with `Submodule.spanFinrank_eq_
 the `Module.finrank` lemma. Nothing here is deep; it is simply missing from Mathlib.
 -/
 
+public section
+
 namespace Submodule
 
 variable {K M : Type*} [DivisionRing K] [AddCommGroup M] [Module K M]

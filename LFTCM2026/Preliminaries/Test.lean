@@ -8,4 +8,6 @@ module
 
 public import Mathlib.Tactic
 
+public section
+
 lemma foo : 0 = 0 := rfl
