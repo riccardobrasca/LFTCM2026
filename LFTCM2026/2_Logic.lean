@@ -244,9 +244,18 @@ example (x : ℝ) (h : ¬ x ≤ 3) : 3 < x := by
   exact h
   done
 
-example {X : Type*} (P : X → Prop) : ¬ (∃ x, P x) ↔ ∀ x, ¬ P x := by
-  push Not
-  rfl
+example (S : Set ℝ) (x : ℝ) (h : ¬ ∀ y ∈ S, y ≤ x) : ∃ y ∈ S, x < y := by
+  push Not at h
+  exact h
+  done
+
+/- A longer example: here `push Not` only gets us started. Once `h` says `0 ≤ x ∧ x ≤ 1`, we
+still have to do some real work, using `pow_two : x ^ 2 = x * x` and
+`mul_le_of_le_one_right : 0 ≤ a → b ≤ 1 → a * b ≤ a`. -/
+example (x : ℝ) (h : ¬ (x < 0 ∨ 1 < x)) : x ^ 2 ≤ x := by
+  push Not at h
+  rw [pow_two]
+  exact mul_le_of_le_one_right h.1 h.2
   done
 
 /-!
@@ -359,7 +368,9 @@ remember:
 * use `intro` to prove a negation;
 * use `exfalso` or `by_contra` when you want the goal to become `False`;
 * use `push Not (at h)` to push negations (inside `h`);
-* use `by_cases hP : P` to consider separately the cases `P` and `¬ P`.
+* use `by_cases hP : P` to consider separately the cases `P` and `¬ P`;
+* use `apply Set.ext` and `intro x` to turn a set equality into a membership `↔` for an
+  arbitrary `x`.
 
 Replace each `sorry` with a proof. If you leave an exercise unfinished, put `sorry` back so that
 the rest of the file remains usable.
