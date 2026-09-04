@@ -142,6 +142,11 @@ The project uses the **Lean 4 module system** (toolchain `v4.34.0-rc1`):
 - `Preliminaries.lean` and the files under `Preliminaries/` use `public import`, so that what they
   import stays visible to the exercise files downstream. Exercise files, which nothing imports, use
   a plain `import`.
+- A file under `Preliminaries/` that *defines* something an exercise file will use needs a
+  `public section` after its imports. Without it the declarations stay private to the module and
+  the exercise file fails with `Unknown constant`, even though everything compiles: `public import`
+  re-exports what a module imports, not what it declares. `LFTCM2026.lean` follows the imports, so
+  a mistake here shows up as a broken exercise file, never as a broken `lake build`.
 
 Source files carry the mathlib-style copyright header (Apache 2.0, `Authors:` line).
 
