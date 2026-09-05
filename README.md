@@ -37,6 +37,19 @@ same colours, press `Ctrl K` then `Ctrl T` (`Cmd K` then `Cmd T` on a Mac) and c
 `Light Modern`; the same list is under `File > Preferences > Theme > Color Theme`
 (`Code > Settings > Theme > Color Theme` on a Mac).
 
+### Windows: exclude the project folder from the antivirus
+
+Lean and mathlib are made of tens of thousands of small files, and Microsoft Defender (or whatever
+antivirus you use) scans each of them every time it is read. On Windows this slows the download,
+the build and the editor down a lot, and it sometimes makes the download fail outright. It is
+therefore a good idea, before you start, to tell Defender to leave the folder alone: go to
+`Windows Security > Virus & threat protection > Virus & threat protection settings >
+Manage settings > Exclusions > Add or remove exclusions > Add an exclusion > Folder` and pick the
+folder you are about to install the project into.
+
+This is only a recommendation — everything works without it — and it is a Windows matter: on Linux
+and macOS there is nothing to do.
+
 ### Get the repository using VS Code
 
 * Open VS Code. In the top-right (or top-middle) of the screen there is a Lean menu marked by `∀`.
@@ -76,7 +89,9 @@ same colours, press `Ctrl K` then `Ctrl T` (`Cmd K` then `Cmd T` on a Mac) and c
 
 * On Windows, if you get an error starting with `curl: (35) schannel: next
   InitializeSecurityContext failed`, it is probably your antivirus program objecting to the many
-  downloads. The easiest fix is to disable it temporarily.
+  downloads. Excluding the folder as described
+  [above](#windows-exclude-the-project-folder-from-the-antivirus) usually fixes it; disabling the
+  antivirus temporarily works too.
 
 * Open the folder in VS Code, either from the menu (`File > Open Folder`, just `Open` on a Mac) or
   by running `code .` in the terminal (note the dot). macOS users need a one-off
