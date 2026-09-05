@@ -31,6 +31,12 @@ project: instead get this repository in one of the two ways below.
 Either way you will download mathlib, so make sure you have enough free disk space: the repository
 takes about 8 GB, on top of roughly 3 GB for Lean itself.
 
+The screenshots below are taken with the `Light Modern` colour theme, so your VS Code may look
+different (the default is the dark one). Everything works the same either way, but if you want the
+same colours, press `Ctrl K` then `Ctrl T` (`Cmd K` then `Cmd T` on a Mac) and choose
+`Light Modern`; the same list is under `File > Preferences > Theme > Color Theme`
+(`Code > Settings > Theme > Color Theme` on a Mac).
+
 ### Get the repository using VS Code
 
 * Open VS Code. In the top-right (or top-middle) of the screen there is a Lean menu marked by `∀`.
