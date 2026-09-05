@@ -6,7 +6,6 @@ Authors: Fabrizio Barroero
 
 module
 
-import Mathlib
 import LFTCM2026.Preliminaries
 
 /-!

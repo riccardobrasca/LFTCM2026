@@ -97,12 +97,15 @@ example (n : ℕ) : 0 < n ! := by
 /- A continuous function on a compact set attains its minimum. In Mathlib the conclusion is
 written with `IsMinOn`: `IsMinOn f s x` says that `f x ≤ f y` for every `y ∈ s`.
 
-Here the error is intentional: the statement is false when `s` is empty. The error message suggests
-trying `apply?`. In general, a failed search does *not* mean that the statement is false. -/
+The next two demonstrations are commented out in this solutions file because the statement is
+false when `s` is empty. Uncomment them to try the searches. In general, a failed search does
+*not* mean that the statement is false. -/
+/-
 example {X : Type*} [TopologicalSpace X] {s : Set X} {f : X → ℝ} (hs : IsCompact s)
     (hf : ContinuousOn f s) : ∃ x ∈ s, IsMinOn f s x := by
   exact?
   done
+-/
 
 /- `apply?` also lists the lemmas that close the goal *up to* some hypotheses. The list is long,
 but it contains `refine IsCompact.exists_isMinOn hs ?_ hf`, with `s.Nonempty` as the remaining
@@ -110,10 +113,12 @@ goal: the assumption our statement was missing. A search that fails is informati
 
 Here `apply?` admits the goal with `sorry` after printing its partial suggestions. This is not a
 completed proof: choose a suggestion and prove its remaining goals. -/
+/-
 example {X : Type*} [TopologicalSpace X] {s : Set X} {f : X → ℝ} (hs : IsCompact s)
     (hf : ContinuousOn f s) : ∃ x ∈ s, IsMinOn f s x := by
   apply?
   done
+-/
 
 /- Inspect the lemma, add the missing assumption, and use it. Try `exact?` here as well. -/
 #check IsCompact.exists_isMinOn
@@ -208,25 +213,25 @@ with a proof using it. Check which arguments and hypotheses the lemma needs.
 -/
 
 theorem mathlib_ex1 (x : ℝ) (hx : 0 ≤ x) : Real.sqrt x ^ 2 = x := by
-  sorry
+  exact Real.sq_sqrt hx
   done
 
 theorem mathlib_ex2 (x : ℝ) : Real.cos x ^ 2 + Real.sin x ^ 2 = 1 := by
-  sorry
+  exact Real.cos_sq_add_sin_sq x
   done
 
 theorem mathlib_ex3 (s t : Finset ℕ) : (s ∪ t).card + (s ∩ t).card = s.card + t.card := by
-  sorry
+  exact Finset.card_union_add_card_inter s t
   done
 
 theorem mathlib_ex4 (n k : ℕ) (h : k ≤ n) :
     n.choose k * k.factorial * (n - k).factorial = n.factorial := by
-  sorry
+  exact Nat.choose_mul_factorial_mul_factorial h
   done
 
 /- There are infinitely many primes: for every `n` there is a prime at least as large as `n`. -/
 theorem mathlib_ex5 (n : ℕ) : ∃ p, n ≤ p ∧ p.Prime := by
-  sorry
+  exact Nat.exists_infinite_primes n
   done
 
 /-!
@@ -317,12 +322,27 @@ example {X : Type*} (A : Set X) : A ∪ ∅ = A := by
 /- Two exercises. Remember that membership in `Set.univ` is trivially true (`Set.mem_univ`). Both
 are of course in Mathlib, and `exact?` finds them; the point here is to practice `ext`. -/
 
+-- In Mathlib: `Set.inter_univ A`.
 theorem mathlib_ex6 {X : Type*} (A : Set X) : A ∩ Set.univ = A := by
-  sorry
+  ext x
+  constructor
+  · intro hx
+    exact hx.1
+  · intro hx
+    constructor
+    · exact hx
+    · exact Set.mem_univ x
   done
 
+-- In Mathlib: `Set.inter_empty A`.
 theorem mathlib_ex7 {X : Type*} (A : Set X) : A ∩ ∅ = ∅ := by
-  sorry
+  ext x
+  constructor
+  · intro hx
+    exact hx.2
+  · intro hx
+    exfalso
+    exact hx
   done
 
 /-!
@@ -391,6 +411,10 @@ commutative ring. Search for unfamiliar vocabulary and inspect candidate declara
 
 The difficulty rating concerns Mathlib vocabulary, not proofs. A statement with no errors may
 still say the wrong thing: read it back in English and compare its assumptions and conclusion.
+
+In this solutions file, each prompt is followed by one possible idiomatic declaration, and a
+comment names the Mathlib result that proves it, found with the tools of Part 1. Complete proofs
+are included for reference; participants are only asked to formulate the statements.
 -/
 
 /-!
@@ -400,7 +424,12 @@ The difference-of-squares identity does not depend on working over the real numb
 two elements of an arbitrary commutative ring.
 -/
 
--- Write your Lean statement here. (Exercise 1)
+/- `CommRing` supplies the algebraic operations and laws; the usual notation is overloaded. -/
+-- In Mathlib: `sq_sub_sq`, with the two sides exchanged.
+example {R : Type*} [CommRing R] (a b : R) :
+    (a + b) * (a - b) = a ^ 2 - b ^ 2 := by
+  exact (sq_sub_sq a b).symm
+  done
 
 /-!
 ### 2. Images and unions — difficulty 1/5
@@ -409,7 +438,12 @@ Let `f : X → Y` be a function and let `A` and `B` be subsets of `X`. State tha
 `A ∪ B` under `f` is the union of the images of `A` and `B`.
 -/
 
--- Write your Lean statement here. (Exercise 2)
+/- Mathlib writes the direct image of a set as `f '' A`; unions are still written `∪`. -/
+-- In Mathlib: `Set.image_union`.
+example {X Y : Type*} (f : X → Y) (A B : Set X) :
+    f '' (A ∪ B) = f '' A ∪ f '' B := by
+  exact Set.image_union f A B
+  done
 
 /-!
 ### 3. Composition of injections — difficulty 1/5
@@ -417,7 +451,13 @@ Let `f : X → Y` be a function and let `A` and `B` be subsets of `X`. State tha
 Let `f : X → Y` and `g : Y → Z` be injective functions. State that `g ∘ f` is injective.
 -/
 
--- Write your Lean statement here. (Exercise 3)
+/- Injectivity is a predicate on functions, and `∘` is function composition. -/
+-- In Mathlib: `Function.Injective.comp`, used as `hg.comp hf`.
+example {X Y Z : Type*} (f : X → Y) (g : Y → Z)
+    (hf : Function.Injective f) (hg : Function.Injective g) :
+    Function.Injective (g ∘ f) := by
+  exact hg.comp hf
+  done
 
 /-!
 ### 4. Units modulo an integer — difficulty 2/5
@@ -426,7 +466,12 @@ For natural numbers `a` and `n`, state that the residue class of `a` modulo `n` 
 and only if `a` and `n` are coprime.
 -/
 
--- Write your Lean statement here. (Exercise 4)
+/- `ZMod n` is the ring of residues; `IsUnit` means invertible and `Nat.Coprime` means
+coprime. -/
+-- In Mathlib: `ZMod.isUnit_iff_coprime`.
+example (a n : ℕ) : IsUnit (a : ZMod n) ↔ a.Coprime n := by
+  exact ZMod.isUnit_iff_coprime a n
+  done
 
 /-!
 ### 5. Monotone functions and intervals — difficulty 2/5
@@ -435,7 +480,13 @@ Let `f` be a monotone (nondecreasing) function between ordered sets. State that 
 `[a, b]` into the closed interval `[f(a), f(b)]`.
 -/
 
--- Write your Lean statement here. (Exercise 5)
+/- `Set.MapsTo f A B` says that `f` maps `A` into `B`; `Set.Icc` is a closed interval. -/
+-- In Mathlib: `Monotone.mapsTo_Icc`.
+example {X Y : Type*} [Preorder X] [Preorder Y] (f : X → Y)
+    (hf : Monotone f) (a b : X) :
+    Set.MapsTo f (Set.Icc a b) (Set.Icc (f a) (f b)) := by
+  exact hf.mapsTo_Icc
+  done
 
 /-!
 ### 6. Disjoint metric balls — difficulty 2/5
@@ -444,7 +495,13 @@ In a metric space, let `x` and `y` be points and let `r` and `s` be real radii. 
 `r + s ≤ d(x, y)`, then the open balls with centers `x`, `y` and radii `r`, `s` are disjoint.
 -/
 
--- Write your Lean statement here. (Exercise 6)
+/- A `PseudoMetricSpace` is sufficient. Balls are sets, so their disjointness uses the
+general predicate `Disjoint`. -/
+-- In Mathlib: `Metric.ball_disjoint_ball`.
+example {X : Type*} [PseudoMetricSpace X] (x y : X) (r s : ℝ)
+    (h : r + s ≤ dist x y) : Disjoint (Metric.ball x r) (Metric.ball y s) := by
+  exact Metric.ball_disjoint_ball h
+  done
 
 /-!
 ### 7. A zero between opposite signs — difficulty 2/5
@@ -453,7 +510,13 @@ Let a real-valued function be continuous on `[a, b]`, where `a < b`. If `f(a) < 
 that `f` has a zero strictly between `a` and `b`.
 -/
 
--- Write your Lean statement here. (Exercise 7)
+/- Continuity restricted to a set is `ContinuousOn`; `Icc` and `Ioo` denote closed and
+open intervals. -/
+-- In Mathlib: `intermediate_value_Ioo`, stated as `Set.Ioo (f a) (f b) ⊆ f '' Set.Ioo a b`.
+example (f : ℝ → ℝ) (a b : ℝ) (hab : a < b) (hf : ContinuousOn f (Set.Icc a b))
+    (ha : f a < 0) (hb : 0 < f b) : ∃ c ∈ Set.Ioo a b, f c = 0 := by
+  exact intermediate_value_Ioo hab.le hf ⟨ha, hb⟩
+  done
 
 /-!
 ### 8. Counting subsets — difficulty 3/5
@@ -462,7 +525,13 @@ Let `X` be a finite set and let `k` be a natural number. State that the number o
 subsets of `X` is the binomial coefficient “`|X|` choose `k`”.
 -/
 
--- Write your Lean statement here. (Exercise 8)
+/- Finite subsets are `Finset`s. The objects being counted form a subtype, whose cardinality
+is obtained with `Fintype.card`. -/
+-- In Mathlib: `Fintype.card_finset_len`.
+example {α : Type*} [Fintype α] [DecidableEq α] (k : ℕ) :
+    Fintype.card {s : Finset α // s.card = k} = (Fintype.card α).choose k := by
+  exact Fintype.card_finset_len k
+  done
 
 /-!
 ### 9. The handshake lemma — difficulty 3/5
@@ -471,7 +540,13 @@ State the handshake lemma for a finite undirected graph without loops or multipl
 of the vertex degrees equals twice the number of edges.
 -/
 
--- Write your Lean statement here. (Exercise 9)
+/- A loopless undirected graph is `SimpleGraph`. Computing degrees and the edge finset
+requires decidable adjacency. -/
+-- In Mathlib: `SimpleGraph.sum_degrees_eq_twice_card_edges`.
+example {V : Type*} [Fintype V] [DecidableEq V] (G : SimpleGraph V)
+    [DecidableRel G.Adj] : ∑ v, G.degree v = 2 * G.edgeFinset.card := by
+  exact G.sum_degrees_eq_twice_card_edges
+  done
 
 /-!
 ### 10. Cauchy's theorem — difficulty 3/5
@@ -480,7 +555,13 @@ Let `G` be a finite group and let `p` be a prime dividing the order of `G`. Stat
 `G` contains an element of order `p`.
 -/
 
--- Write your Lean statement here. (Exercise 10)
+/- `Nat.card G` is the cardinality of a finite type, and primality can be supplied as a
+`Fact` typeclass. -/
+-- In Mathlib: `exists_prime_orderOf_dvd_card'`.
+example {G : Type*} [Group G] [Finite G] (p : ℕ) [Fact (Nat.Prime p)]
+    (hp : p ∣ Nat.card G) : ∃ g : G, orderOf g = p := by
+  exact exists_prime_orderOf_dvd_card' p hp
+  done
 
 /-!
 ### 11. Rank–nullity — difficulty 3/5
@@ -491,7 +572,16 @@ State the rank–nullity formula
 `dim(ker f) + dim(im f) = dim V`.
 -/
 
--- Write your Lean statement here. (Exercise 11)
+/- Vector spaces are expressed by `AddCommGroup` and `Module`. A linear map's kernel and
+range are submodules, and `Module.finrank` is finite dimension. -/
+-- In Mathlib: `LinearMap.finrank_range_add_finrank_ker`, with the two summands exchanged.
+example {V W : Type*} [AddCommGroup V] [Module ℝ V] [AddCommGroup W] [Module ℝ W]
+    [FiniteDimensional ℝ V] (f : V →ₗ[ℝ] W) :
+    Module.finrank ℝ ↑(LinearMap.ker f) + Module.finrank ℝ ↑(LinearMap.range f) =
+      Module.finrank ℝ V := by
+  rw [Nat.add_comm]
+  exact f.finrank_range_add_finrank_ker
+  done
 
 /-!
 ### 12. The fundamental theorem of algebra — difficulty 3/5
@@ -499,7 +589,12 @@ State the rank–nullity formula
 State that every nonconstant polynomial with complex coefficients has a complex root.
 -/
 
--- Write your Lean statement here. (Exercise 12)
+/- Polynomial degree takes values in `WithBot ℕ`, and `p.IsRoot z` abbreviates
+`p.eval z = 0`. -/
+-- In Mathlib: `Complex.exists_root`.
+example (p : Polynomial ℂ) (hp : 0 < p.degree) : ∃ z : ℂ, p.IsRoot z := by
+  exact Complex.exists_root hp
+  done
 
 /-!
 ### 13. A compact-to-Hausdorff bijection — difficulty 3/5
@@ -508,7 +603,14 @@ Let `X` be a compact topological space and `Y` a Hausdorff topological space. St
 continuous bijection from `X` to `Y` is a homeomorphism.
 -/
 
--- Write your Lean statement here. (Exercise 13)
+/- Compactness and the Hausdorff property are typeclasses. The conclusion is the predicate
+`IsHomeomorph f`, not the bundled type `Homeomorph X Y`. -/
+-- In Mathlib: `isHomeomorph_iff_continuous_bijective`.
+example {X Y : Type*} [TopologicalSpace X] [CompactSpace X] [TopologicalSpace Y]
+    [T2Space Y] (f : X → Y) (hf : Continuous f) (hbij : Function.Bijective f) :
+    IsHomeomorph f := by
+  exact isHomeomorph_iff_continuous_bijective.mpr ⟨hf, hbij⟩
+  done
 
 /-!
 ### 14. The contraction mapping theorem — difficulty 3/5
@@ -517,7 +619,18 @@ Let `X` be a nonempty complete metric space and let `f : X → X` be a contracti
 constant is strictly less than one. State that `f` has a unique fixed point.
 -/
 
--- Write your Lean statement here. (Exercise 14)
+/- A contraction constant is a nonnegative real. `ContractingWith` includes the strict
+bound by one, while `Function.IsFixedPt` expresses the fixed-point equation. -/
+-- In Mathlib: the fixed point is `ContractingWith.fixedPoint`, and
+-- `ContractingWith.fixedPoint_isFixedPt` and `ContractingWith.fixedPoint_unique` give existence
+-- and uniqueness.
+example {X : Type*} [MetricSpace X] [CompleteSpace X] [Nonempty X]
+    (K : NNReal) (f : X → X) (hf : ContractingWith K f) :
+    ∃! x, Function.IsFixedPt f x := by
+  refine ⟨ContractingWith.fixedPoint f hf, hf.fixedPoint_isFixedPt, ?_⟩
+  intro x hx
+  exact hf.fixedPoint_unique hx
+  done
 
 /-!
 ### 15. Continuity of measure from below — difficulty 3/5
@@ -526,7 +639,14 @@ Let `(Aₙ)` be an increasing sequence of measurable sets in a measure space. St
 measures of the `Aₙ` tend to the measure of their union.
 -/
 
--- Write your Lean statement here. (Exercise 15)
+/- An increasing sequence of sets is simply a `Monotone` function. Convergence is stated
+with filters, and a countable union is written `⋃ n, A n`. -/
+-- In Mathlib: `MeasureTheory.tendsto_measure_iUnion_atTop`, which does not even need measurability.
+example {α : Type*} [MeasurableSpace α] (μ : MeasureTheory.Measure α)
+    (A : ℕ → Set α) (hA : ∀ n, MeasurableSet (A n)) (hmono : Monotone A) :
+    Filter.Tendsto (μ ∘ A) Filter.atTop (nhds (μ (⋃ n, A n))) := by
+  exact MeasureTheory.tendsto_measure_iUnion_atTop hmono
+  done
 
 /-!
 ### 16. The Chinese remainder theorem — difficulty 4/5
@@ -535,7 +655,13 @@ Let `I` and `J` be comaximal ideals of a commutative ring `R`. State the two-ide
 remainder theorem: `R / (I ∩ J)` is isomorphic as a ring to `(R / I) × (R / J)`.
 -/
 
--- Write your Lean statement here. (Exercise 16)
+/- Ideals form a lattice, so their intersection is `I ⊓ J`. Quotient rings and ring
+isomorphisms are written `R ⧸ I` and `≃+*`; `Nonempty` asserts existence. -/
+-- In Mathlib: `Ideal.quotientInfEquivQuotientProd`.
+example {R : Type*} [CommRing R] (I J : Ideal R) (h : IsCoprime I J) :
+    Nonempty ((R ⧸ (I ⊓ J)) ≃+* (R ⧸ I) × (R ⧸ J)) := by
+  exact ⟨Ideal.quotientInfEquivQuotientProd I J h⟩
+  done
 
 /-!
 ### 17. The Cayley–Hamilton theorem — difficulty 4/5
@@ -545,7 +671,13 @@ in a commutative ring. State that substituting `A` into its characteristic polyn
 zero matrix.
 -/
 
--- Write your Lean statement here. (Exercise 17)
+/- A square matrix uses the same finite index type twice. `Polynomial.aeval A` evaluates a
+polynomial at the matrix `A`, in the matrix algebra over `R`. -/
+-- In Mathlib: `Matrix.aeval_self_charpoly`.
+example {R ι : Type*} [CommRing R] [DecidableEq ι] [Fintype ι]
+    (A : Matrix ι ι R) : Polynomial.aeval A A.charpoly = 0 := by
+  exact Matrix.aeval_self_charpoly A
+  done
 
 /-!
 ### 18. A finite form of Carathéodory's theorem — difficulty 4/5
@@ -554,7 +686,16 @@ Let `S` be a subset of a real vector space and let `x` belong to the convex hull
 `x` lies in the convex hull of some finite affinely independent subset of `S`.
 -/
 
--- Write your Lean statement here. (Exercise 18)
+/- The coercions turn a `Finset` into a set and its elements into vectors.
+`AffineIndependent` is applied to the inclusion of the finite subtype. -/
+-- In Mathlib: `convexHull_eq_union`.
+example {E : Type*} [AddCommGroup E] [Module ℝ E] (s : Set E) (x : E)
+    (hx : x ∈ convexHull ℝ s) :
+    ∃ t : Finset E, ↑t ⊆ s ∧ AffineIndependent ℝ ((↑) : t → E) ∧
+      x ∈ convexHull ℝ (t : Set E) := by
+  rw [convexHull_eq_union] at hx
+  simpa only [Set.mem_iUnion, exists_prop] using hx
+  done
 
 /-!
 ### 19. Liouville's theorem — difficulty 4/5
@@ -563,7 +704,14 @@ State Liouville's theorem: a complex-differentiable function from `ℂ` to `ℂ`
 bounded is constant.
 -/
 
--- Write your Lean statement here. (Exercise 19)
+/- Complex differentiability is `Differentiable ℂ f`. Boundedness is phrased in the
+bornology of the range, and a constant function is `Function.const`. -/
+-- In Mathlib: `Differentiable.exists_eq_const_of_bounded`.
+example (f : ℂ → ℂ) (hf : Differentiable ℂ f)
+    (hb : Bornology.IsBounded (Set.range f)) :
+    ∃ c : ℂ, f = Function.const ℂ c := by
+  exact hf.exists_eq_const_of_bounded hb
+  done
 
 /-!
 ### 20. Chebyshev's inequality — difficulty 4/5
@@ -572,4 +720,13 @@ Let `X` be a square-integrable real random variable on a probability space and l
 that the probability that `|X - E[X]|` is at least `c` is at most `Var(X) / c²`.
 -/
 
--- Write your Lean statement here. (Exercise 20)
+/- The probability-space assumption is a typeclass. `MemLp X 2 μ` expresses square
+integrability; expectation is an integral, while measures take values in `ℝ≥0∞`. -/
+-- In Mathlib: `ProbabilityTheory.meas_ge_le_variance_div_sq`.
+example {Ω : Type*} [MeasurableSpace Ω] (μ : MeasureTheory.Measure Ω)
+    [MeasureTheory.IsProbabilityMeasure μ] (X : Ω → ℝ)
+    (hX : MeasureTheory.MemLp X 2 μ) {c : ℝ} (hc : 0 < c) :
+    μ {ω | c ≤ |X ω - ∫ x, X x ∂μ|} ≤
+      ENNReal.ofReal (ProbabilityTheory.variance X μ / c ^ 2) := by
+  exact ProbabilityTheory.meas_ge_le_variance_div_sq hX hc
+  done

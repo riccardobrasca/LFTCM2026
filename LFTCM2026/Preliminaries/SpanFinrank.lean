@@ -6,7 +6,8 @@ Authors: Riccardo Brasca
 
 module
 
-public import Mathlib
+public import Mathlib.Algebra.Module.SpanRank
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # The missing `Submodule.spanFinrank` API

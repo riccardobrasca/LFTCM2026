@@ -6,7 +6,6 @@ Authors: Riccardo Brasca
 
 module
 
-import Mathlib
 import LFTCM2026.Preliminaries
 
 open Real

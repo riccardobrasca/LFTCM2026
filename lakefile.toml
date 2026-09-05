@@ -18,7 +18,10 @@ warn.sorry = true
 warn.classDefReducibility = false
 warn.exposeOnPrivate = false
 warn.redundantExpose = false
-warn.refl_coherence = false
+# `warn.refl_coherence` is registered by Mathlib, not by Lean, so it does not exist for a file
+# that does not import the Mathlib module defining it — `Preliminaries/SpanFinrank.lean`, whose
+# imports are narrow. The `weak.` prefix makes Lake ignore the option where it is unknown.
+weak.warn.refl_coherence = false
 maxSynthPendingDepth = 3
 
 [[require]]

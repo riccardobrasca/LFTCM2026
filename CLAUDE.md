@@ -14,10 +14,18 @@ frictionless first-run experience matter more than elegance, brevity, or general
 
 ## The import invariant
 
-**No file imports anything other than `Mathlib` and modules under `LFTCM2026.Preliminaries`.**
-In particular, exercise files are imported by *nothing* — not by `LFTCM2026.lean`, not by each
-other. (The single exception is the root `LFTCM2026.lean` itself, which also imports
-`LFTCM2026.Test`, the installation check; see below.)
+**Every file in the repository imports `LFTCM2026.Preliminaries` and nothing else.** In particular,
+exercise files are imported by *nothing* — not by `LFTCM2026.lean`, not by each other. (The single
+exception is the root `LFTCM2026.lean` itself, which also imports `LFTCM2026.Test`, the
+installation check; see below.)
+
+**No file says `import Mathlib`.** The one place that reaches into Mathlib is
+`LFTCM2026/Preliminaries/Imports.lean`, which imports a short curated list of Mathlib modules and
+is re-exported by `LFTCM2026.Preliminaries`; the files under `Preliminaries/` that define something
+use their own narrow imports. `import Mathlib` pulls in about 8500 modules and the curated list
+about 3500, which is everything the sessions actually use, so the whole difference is editor speed
+and memory for the participant. That file's own docstring says how to extend the list; the summary
+is that adding one line is cheap and going back to `import Mathlib` is not.
 
 The reason is the participant experience, and it is worth protecting carefully. Everything an
 exercise file imports is already compiled before anyone opens it: Mathlib comes from
@@ -38,7 +46,9 @@ These are what beginners read during the conference. `LFTCM2026/1_BasicTactic.le
 
 - **Imported from nowhere. Never add one to `LFTCM2026.lean`.** Nothing else in the repository may
   mention them.
-- **May import only `Mathlib` and `LFTCM2026.Preliminaries.*`.**
+- **Import `LFTCM2026.Preliminaries`, and nothing else.** Never `import Mathlib`: what Mathlib
+  offers arrives through `Preliminaries`. If a session needs something that is not there, add a
+  line to `LFTCM2026/Preliminaries/Imports.lean`.
 - Free to be broken: errors, `sorry`s and warnings are all fine and expected.
 - By convention they live in the `LFTCM2026/` source directory, which is what the README tells
   participants to open and what the VS Code explorer is set up to show. Nothing technical depends
@@ -64,7 +74,13 @@ These are what beginners read during the conference. `LFTCM2026/1_BasicTactic.le
 Everything an exercise file needs but participants should not have to look at: missing instances,
 setup, glue, custom notation, helper lemmas.
 
-- **May import anything.** No restrictions.
+- **May import any Mathlib module, but not `Mathlib` itself.** Give a file the narrow imports it
+  actually needs (`SpanFinrank.lean` is the model: two lines). The one file that is nothing but
+  imports is `Imports.lean`, the curated Mathlib list every exercise file sees; it is described
+  under *The import invariant* above and in its own docstring.
+  - A Lean option registered by Mathlib rather than by Lean — `warn.refl_coherence` is the only
+    one `lakefile.toml` sets — has to be written `weak.…` there, since it does not exist for a
+    file whose imports do not reach the module that registers it.
 - **Must compile cleanly.** This is the only code that is ever built, so a `sorry` or an error here
   breaks `lake build` for every participant. Errors are free in exercise files and expensive
   here — the exact opposite of the rule above.
@@ -138,7 +154,12 @@ builds them.
 The project uses the **Lean 4 module system** (toolchain `v4.34.0-rc1`):
 
 - Every file under `LFTCM2026/` begins with a bare `module` line, before the imports. The root
-  `LFTCM2026.lean`, which is nothing but a list of imports, does not.
+  `LFTCM2026.lean`, which is nothing but a list of imports, does not, and neither do
+  `5_StructuresAndClasses.lean` and `6_AlgebraNumberTheory.lean`: those two show participants what
+  Lean prints, and a `module` file prints worse. `#print continuous_fst` gives `<not imported>`
+  instead of the proof term, and an error about a local declaration names it
+  `_private.LFTCM2026.«5_StructuresAndClasses».0.quotComm_lemma`. Leave them as legacy files; a
+  legacy file importing `LFTCM2026.Preliminaries` is fine.
 - `Preliminaries.lean` and the files under `Preliminaries/` use `public import`, so that what they
   import stays visible to the exercise files downstream. Exercise files, which nothing imports, use
   a plain `import`.
