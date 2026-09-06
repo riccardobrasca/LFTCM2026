@@ -482,7 +482,7 @@ theorem exercise_11 {G : Type*} [Group G] (H K : Subgroup G) (hcover : ∀ g : G
 
 Cancelling on both sides of the cube identity gives `(h g) ^ 2 = g ^ 2 h ^ 2`. Combined with the
 fifth-power identity it shows that squares commute with cubes and with fifth powers, hence with
-`h = h ^ 3 (h ^ 2)⁻¹` — squares are central. Feeding that back into `(h g) ^ 2 = g ^ 2 h ^ 2` and
+`h = h ^ 3 (h ^ 2)⁻¹`: squares are central. Feeding that back into `(h g) ^ 2 = g ^ 2 h ^ 2` and
 cancelling once more gives `g h = h g`.
 -/
 

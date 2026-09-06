@@ -20,6 +20,8 @@ public import Mathlib.Analysis.Real.Pi.Bounds
 -- Integrals of the elementary functions, and the differential calculus behind them
 -- (`Exercises.lean`, exercises 7 and 9).
 public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+-- Harmonic series divergence (`SubtleStatement.lean`).
+public import Mathlib.Analysis.PSeries
 -- `SimpleGraph` and the handshake lemma (session 4, statement 9).
 public import Mathlib.Combinatorics.SimpleGraph.DegreeSum
 -- Burnside's normal complement theorem (`Exercises.lean`, exercise 10), and Sylow theory with it.

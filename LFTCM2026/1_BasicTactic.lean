@@ -59,7 +59,7 @@ Two things in that sentence do deserve a comment now:
 The keywords `by` and `done` delimit the proof: they tell Lean that you intend to write the proof
 between the line after `by` and the line before `done`. They play the role of `\begin{proof}` and
 `\end{proof}` in LaTeX. In particular, writing `done` is not you telling Lean that the proof is
-finished: it only marks the point after which nothing concerns this theorem any more — and if the
+finished: it only marks the point after which nothing concerns this theorem any more, and if the
 proof is in fact not complete, that is exactly where you get an error.
 -/
 example {X Y Z : Type*} [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
@@ -152,7 +152,7 @@ example (x y : ℝ) (hx : x + 4 = 7) (hy : x + 4 + y = 5) : 7 + y = 5 := by
 
 /- Now a lemma from the library instead of a local assumption: `mul_one` says `a * 1 = a`, for
 every `a`. That `a` is an argument, and you may supply it yourself to choose which occurrence is
-rewritten — below, `y * 1` first. -/
+rewritten: below, `y * 1` first. -/
 example (x y : ℝ) : x * 1 + y * 1 = x + y := by
   rw [mul_one y, mul_one x]
   done
@@ -304,7 +304,7 @@ example : ∀ x : ℝ, x ≤ x := by
 /-!
 ## Exercises
 
-Every exercise below can be done with the tactics of this file — `exact`, `assumption`, `rw`,
+Every exercise below can be done with the tactics of this file: `exact`, `assumption`, `rw`,
 `rfl`, `apply`, `have`, `intro` and `contradiction`.
 
 Each proof is `sorry` for the moment. `sorry` is the tactic that closes any goal by asking Lean to

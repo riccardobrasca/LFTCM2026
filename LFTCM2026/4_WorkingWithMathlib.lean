@@ -160,8 +160,8 @@ tactic). A query is a list of filters, separated by commas, that must all be sat
 
 * a pattern, where `_` matches anything: `_ - _ + _ = _`;
 * `⊢` (typed `\vdash`) in front of a pattern restricts the match to the conclusion of the
-  statement — the web interface also accepts the ASCII form `|-`, but the `#loogle` command does
-  not;
+  statement (the web interface also accepts the ASCII form `|-`, but the `#loogle` command does
+  not);
 * a constant, such as `Finset.sum`, asks for the statements mentioning it;
 * a string, such as `"comm"`, asks for the *names* containing it.
 -/
@@ -294,7 +294,7 @@ each type. Membership in it is trivially true.
 In the logic session we proved that two sets are equal starting with `apply Set.ext` followed by
 `intro x`. The tactic `ext x` does both at once: on a goal `A = B` between two sets it introduces
 an element `x` and leaves the goal `x ∈ A ↔ x ∈ B`. (It is in fact much more general: `ext`
-applies to any goal saying that two objects made of the same pieces are equal — for instance two
+applies to any goal saying that two objects made of the same pieces are equal, for instance two
 functions that agree at every point.)
 -/
 
@@ -394,7 +394,7 @@ still say the wrong thing: read it back in English and compare its assumptions a
 -/
 
 /-!
-### 1. Difference of squares — difficulty 1/5
+### 1. Difference of squares (difficulty 1/5)
 
 The difference-of-squares identity does not depend on working over the real numbers. State it for
 two elements of an arbitrary commutative ring.
@@ -403,7 +403,7 @@ two elements of an arbitrary commutative ring.
 -- Write your Lean statement here. (Exercise 1)
 
 /-!
-### 2. Images and unions — difficulty 1/5
+### 2. Images and unions (difficulty 1/5)
 
 Let `f : X → Y` be a function and let `A` and `B` be subsets of `X`. State that the image of
 `A ∪ B` under `f` is the union of the images of `A` and `B`.
@@ -412,7 +412,7 @@ Let `f : X → Y` be a function and let `A` and `B` be subsets of `X`. State tha
 -- Write your Lean statement here. (Exercise 2)
 
 /-!
-### 3. Composition of injections — difficulty 1/5
+### 3. Composition of injections (difficulty 1/5)
 
 Let `f : X → Y` and `g : Y → Z` be injective functions. State that `g ∘ f` is injective.
 -/
@@ -420,7 +420,7 @@ Let `f : X → Y` and `g : Y → Z` be injective functions. State that `g ∘ f`
 -- Write your Lean statement here. (Exercise 3)
 
 /-!
-### 4. Units modulo an integer — difficulty 2/5
+### 4. Units modulo an integer (difficulty 2/5)
 
 For natural numbers `a` and `n`, state that the residue class of `a` modulo `n` is invertible if
 and only if `a` and `n` are coprime.
@@ -429,7 +429,7 @@ and only if `a` and `n` are coprime.
 -- Write your Lean statement here. (Exercise 4)
 
 /-!
-### 5. Monotone functions and intervals — difficulty 2/5
+### 5. Monotone functions and intervals (difficulty 2/5)
 
 Let `f` be a monotone (nondecreasing) function between ordered sets. State that `f` maps the closed
 `[a, b]` into the closed interval `[f(a), f(b)]`.
@@ -438,7 +438,7 @@ Let `f` be a monotone (nondecreasing) function between ordered sets. State that 
 -- Write your Lean statement here. (Exercise 5)
 
 /-!
-### 6. Disjoint metric balls — difficulty 2/5
+### 6. Disjoint metric balls (difficulty 2/5)
 
 In a metric space, let `x` and `y` be points and let `r` and `s` be real radii. State that if
 `r + s ≤ d(x, y)`, then the open balls with centers `x`, `y` and radii `r`, `s` are disjoint.
@@ -447,7 +447,7 @@ In a metric space, let `x` and `y` be points and let `r` and `s` be real radii. 
 -- Write your Lean statement here. (Exercise 6)
 
 /-!
-### 7. A zero between opposite signs — difficulty 2/5
+### 7. A zero between opposite signs (difficulty 2/5)
 
 Let a real-valued function be continuous on `[a, b]`, where `a < b`. If `f(a) < 0 < f(b)`, state
 that `f` has a zero strictly between `a` and `b`.
@@ -456,7 +456,7 @@ that `f` has a zero strictly between `a` and `b`.
 -- Write your Lean statement here. (Exercise 7)
 
 /-!
-### 8. Counting subsets — difficulty 3/5
+### 8. Counting subsets (difficulty 3/5)
 
 Let `X` be a finite set and let `k` be a natural number. State that the number of `k`-element
 subsets of `X` is the binomial coefficient “`|X|` choose `k`”.
@@ -465,7 +465,7 @@ subsets of `X` is the binomial coefficient “`|X|` choose `k`”.
 -- Write your Lean statement here. (Exercise 8)
 
 /-!
-### 9. The handshake lemma — difficulty 3/5
+### 9. The handshake lemma (difficulty 3/5)
 
 State the handshake lemma for a finite undirected graph without loops or multiple edges: the sum
 of the vertex degrees equals twice the number of edges.
@@ -474,7 +474,7 @@ of the vertex degrees equals twice the number of edges.
 -- Write your Lean statement here. (Exercise 9)
 
 /-!
-### 10. Cauchy's theorem — difficulty 3/5
+### 10. Cauchy's theorem (difficulty 3/5)
 
 Let `G` be a finite group and let `p` be a prime dividing the order of `G`. State Cauchy's theorem:
 `G` contains an element of order `p`.
@@ -483,7 +483,7 @@ Let `G` be a finite group and let `p` be a prime dividing the order of `G`. Stat
 -- Write your Lean statement here. (Exercise 10)
 
 /-!
-### 11. Rank–nullity — difficulty 3/5
+### 11. Rank–nullity (difficulty 3/5)
 
 Let `V` and `W` be real vector spaces, with `V` finite-dimensional, and let `f : V → W` be linear.
 State the rank–nullity formula
@@ -494,7 +494,7 @@ State the rank–nullity formula
 -- Write your Lean statement here. (Exercise 11)
 
 /-!
-### 12. The fundamental theorem of algebra — difficulty 3/5
+### 12. The fundamental theorem of algebra (difficulty 3/5)
 
 State that every nonconstant polynomial with complex coefficients has a complex root.
 -/
@@ -502,7 +502,7 @@ State that every nonconstant polynomial with complex coefficients has a complex 
 -- Write your Lean statement here. (Exercise 12)
 
 /-!
-### 13. A compact-to-Hausdorff bijection — difficulty 3/5
+### 13. A compact-to-Hausdorff bijection (difficulty 3/5)
 
 Let `X` be a compact topological space and `Y` a Hausdorff topological space. State that every
 continuous bijection from `X` to `Y` is a homeomorphism.
@@ -511,7 +511,7 @@ continuous bijection from `X` to `Y` is a homeomorphism.
 -- Write your Lean statement here. (Exercise 13)
 
 /-!
-### 14. The contraction mapping theorem — difficulty 3/5
+### 14. The contraction mapping theorem (difficulty 3/5)
 
 Let `X` be a nonempty complete metric space and let `f : X → X` be a contraction whose contraction
 constant is strictly less than one. State that `f` has a unique fixed point.
@@ -520,7 +520,7 @@ constant is strictly less than one. State that `f` has a unique fixed point.
 -- Write your Lean statement here. (Exercise 14)
 
 /-!
-### 15. Continuity of measure from below — difficulty 3/5
+### 15. Continuity of measure from below (difficulty 3/5)
 
 Let `(Aₙ)` be an increasing sequence of measurable sets in a measure space. State that the
 measures of the `Aₙ` tend to the measure of their union.
@@ -529,7 +529,7 @@ measures of the `Aₙ` tend to the measure of their union.
 -- Write your Lean statement here. (Exercise 15)
 
 /-!
-### 16. The Chinese remainder theorem — difficulty 4/5
+### 16. The Chinese remainder theorem (difficulty 4/5)
 
 Let `I` and `J` be comaximal ideals of a commutative ring `R`. State the two-ideal Chinese
 remainder theorem: `R / (I ∩ J)` is isomorphic as a ring to `(R / I) × (R / J)`.
@@ -538,7 +538,7 @@ remainder theorem: `R / (I ∩ J)` is isomorphic as a ring to `(R / I) × (R / J
 -- Write your Lean statement here. (Exercise 16)
 
 /-!
-### 17. The Cayley–Hamilton theorem — difficulty 4/5
+### 17. The Cayley–Hamilton theorem (difficulty 4/5)
 
 Let `A` be a square matrix whose rows and columns are indexed by a finite set and whose entries lie
 in a commutative ring. State that substituting `A` into its characteristic polynomial gives the
@@ -548,7 +548,7 @@ zero matrix.
 -- Write your Lean statement here. (Exercise 17)
 
 /-!
-### 18. A finite form of Carathéodory's theorem — difficulty 4/5
+### 18. A finite form of Carathéodory's theorem (difficulty 4/5)
 
 Let `S` be a subset of a real vector space and let `x` belong to the convex hull of `S`. State that
 `x` lies in the convex hull of some finite affinely independent subset of `S`.
@@ -557,7 +557,7 @@ Let `S` be a subset of a real vector space and let `x` belong to the convex hull
 -- Write your Lean statement here. (Exercise 18)
 
 /-!
-### 19. Liouville's theorem — difficulty 4/5
+### 19. Liouville's theorem (difficulty 4/5)
 
 State Liouville's theorem: a complex-differentiable function from `ℂ` to `ℂ` whose range is
 bounded is constant.
@@ -566,7 +566,7 @@ bounded is constant.
 -- Write your Lean statement here. (Exercise 19)
 
 /-!
-### 20. Chebyshev's inequality — difficulty 4/5
+### 20. Chebyshev's inequality (difficulty 4/5)
 
 Let `X` be a square-integrable real random variable on a probability space and let `c > 0`. State
 that the probability that `|X - E[X]|` is at least `c` is at most `Var(X) / c²`.
