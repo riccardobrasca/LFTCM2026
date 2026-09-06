@@ -151,6 +151,20 @@ If the `import` lines at the top of the file have a red squiggle, with an error 
   also called `LFTCM2026`: you have to select the first one, *not* `LFTCM2026/LFTCM2026`.
 * If the error persists you can use Codespaces as described above, and ask for help.
 
+## The Lean Zulip
+
+Almost every discussion about Lean and mathlib happens on the
+[Lean Zulip](https://leanprover.zulipchat.com/): the mathlib maintainers, the authors of the
+tactics you are using and essentially every Lean expert are there, and that is where questions get
+answered. Signing up is free and open to everyone, and doing it before the workshop is a good idea.
+
+The traffic is high, and nobody reads all of it. As a beginner you can simply follow whatever looks
+interesting and ask your own questions in the `#new members` channel, which exists exactly for
+that: no question is too basic there, and an answer usually arrives within minutes.
+
+There is also a channel dedicated to this workshop. To be added to it, send a private message to
+Riccardo Brasca on Zulip.
+
 ## License
 
 This repository is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).
