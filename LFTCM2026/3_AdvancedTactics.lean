@@ -21,6 +21,7 @@ well-specified steps automatically. In this lecture, we will learn about:
 * `obtain`, `use`: working with existentials
 * `induction`: proof by induction
 * `congr`, `gcongr`, `grw`: congruence and generalised rewriting
+* `grind`: general purpose automation
 
 As before, move the cursor line by line and watch the goal in the Infoview.
 -/
@@ -45,7 +46,6 @@ example (x : ℝ) : x + 0 = x := by
   simp?
   done
 
-/- Nothing about `simp` is specific to arithmetic: the simp set covers the whole library. -/
 example (l : List ℕ) (hl : l.length = 42) : (l ++ []).length = l.length := by
   simp
   done
@@ -61,22 +61,17 @@ example (x y : ℝ) (h : x + 0 ≤ y * 1) : x ≤ y := by
   exact h
   done
 
-/- Extra lemmas can be handed to `simp` in a list, and a hypothesis is a lemma like any other:
-`simp [h]` also rewrites with `h`. -/
+/- Extra lemmas or hypothesis can be handed to `simp` in a list. -/
 example (f : ℕ → ℕ) (n : ℕ) (h : ∀ m, f m = m + 1) : f (n + 0) = n + 1 := by
   simp [h]
   done
 
 /-!
-## `simp?` and `simp only`
+## `simp only`
 
-`simp` is convenient but opaque: the proof it produces depends on the whole simp set, which grows
-with every Mathlib release, so a proof that works today may break tomorrow, and while reading it
-you cannot tell what happened.
-
-`simp?` runs `simp` and prints the lemmas it actually used, as a `simp only [...]` call. Click the
-suggestion in the Infoview to replace `simp?` by it. `simp only [l₁, ..., lₙ]` behaves like `simp`
-but uses only the listed lemmas.
+To restrict to specific simplification lemmas, use `simp only [...]`. It works
+like `simp`, but only uses the given lemmas. Every `simp` can be turned into a
+`simp only` automatically by using `simp?` and clicking on the suggestion.
 -/
 
 /- The same proof after clicking it. -/
@@ -173,8 +168,8 @@ example : ∃ a b : ℕ, a + b = 10 := by
   use 4, 6
   done
 
-/- Divisibility is an existential statement: `a ∣ b` (type `∣` as `\|`, it is *not* the bar on
-your keyboard) means `∃ c, b = a * c`. So we can use `obtain` and `use` as before. -/
+/- Divisibility is an existential statement: `a ∣ b` (type `∣` as `\|`, it is *not* plain `|`)
+means `∃ c, b = a * c`. So we can use `obtain` and `use` as before. -/
 example (a b c : ℤ) (hab : a ∣ b) (hbc : b ∣ c) : a ∣ c := by
   obtain ⟨k, hk⟩ := hab
   obtain ⟨l, hl⟩ := hbc
@@ -333,6 +328,29 @@ example (f : ℕ → ℕ) (h : ∀ n, f n = n + 1) : f 1 + f 2 = 5 := by
   done
 
 /-!
+## `grind`
+
+`grind` is a general purpose automation tactic. It combines the simplifier with congruence
+closure, linear arithmetic, the ring normalisation of `ring` and case splitting on the
+hypotheses. It either closes the goal or fails.
+-/
+
+/- Linear arithmetic -/
+example (n : ℕ) (h : 2 * n + 1 = 7) : n = 3 := by
+  grind
+  done
+
+/- `grind` splits into cases by itself, and knows how to compute in a ring. -/
+example (x : ℝ) (h : x = 1 ∨ x = 2) : x ^ 2 - 3 * x + 2 = 0 := by
+  grind
+  done
+
+/- See the end of the logic lecture for a hands-on proof. -/
+example {X : Type*} (A B C : Set X) : A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C) := by
+  grind
+  done
+
+/-!
 ## A longer example
 
 `5 ^ n - 1` is divisible by `4`, by induction on `n`. The proof uses most of this lecture:
@@ -356,7 +374,8 @@ example (n : ℕ) : (4 : ℤ) ∣ 5 ^ n - 1 := by
 ## Exercises
 
 The tactics of this lecture are `simp`, `simp?`, `simp only`, `ring`, `ring_nf`, `use`, `obtain`,
-`induction`, `congr`, `gcongr`, `grw` and `simp_rw`; those of the first two are still available.
+`induction`, `congr`, `gcongr`, `grw`, `simp_rw` and `grind`; those of the first two are still
+available.
 
 As before, replace each `sorry` by a proof.
 -/
@@ -477,8 +496,31 @@ theorem adv_ex_24 (a b c : ℝ) (hc : 0 ≤ c) (h : a ≤ b) : c * a ≤ c * b :
   done
 
 /- Under a binder. -/
-
 theorem adv_ex_25 (f g : ℕ → ℝ) (h : ∀ n, f n = g n * 1) (s : Finset ℕ) :
     ∑ i ∈ s, f i = ∑ i ∈ s, g i := by
+  sorry
+  done
+
+theorem adv_ex_26 (P Q R : Prop) (h : P ∨ (Q ∧ R)) : (P ∨ Q) ∧ (P ∨ R) := by
+  sorry
+  done
+
+theorem adv_ex_27 {X : Type*} (A B C : Set X) : A \ (B ∪ C) = (A \ B) ∩ (A \ C) := by
+  sorry
+  done
+
+theorem adv_ex_28 (a b : ℕ) (h1 : a + b = 10) (h2 : a = 2 * b + 1) : b = 3 := by
+  sorry
+  done
+
+theorem adv_ex_29 (n : ℕ) : n + 1 ≤ 2 ^ n := by
+  sorry
+  done
+
+theorem adv_ex_30 (n : ℕ) : ∑ i ∈ Finset.range n, (2 * i + 3) = n ^ 2 + 2 * n := by
+  sorry
+  done
+
+theorem adv_ex_31 (n : ℕ) : 2 ∣ n ^ 2 + n := by
   sorry
   done
