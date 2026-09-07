@@ -6,7 +6,7 @@ Authors: Fabrizio Barroero
 
 module
 
-import LFTCM2026.Preliminaries
+public import LFTCM2026.Preliminaries
 
 /-!
 # Logic

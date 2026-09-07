@@ -6,7 +6,7 @@ Authors: Christian Merten
 
 module
 
-import LFTCM2026.Preliminaries
+public import LFTCM2026.Preliminaries
 
 /-!
 # Advanced tactics

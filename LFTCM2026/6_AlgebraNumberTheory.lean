@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio
 -/
 
-import LFTCM2026.Preliminaries
+module
+
+public import LFTCM2026.Preliminaries
 
 /- # Algebra (and Number Theory)
 The goal of today's lecture is to discuss some algebraic structures: (Sub)Groups, Rings and Vector

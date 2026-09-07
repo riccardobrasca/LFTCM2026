@@ -6,7 +6,7 @@ Authors: Riccardo Brasca
 
 module
 
-import LFTCM2026.Preliminaries
+public import LFTCM2026.Preliminaries
 
 open Nat
 
