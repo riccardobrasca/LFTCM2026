@@ -24,6 +24,8 @@ public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 public import Mathlib.Analysis.PSeries
 -- `SimpleGraph` and the handshake lemma (session 4, statement 9).
 public import Mathlib.Combinatorics.SimpleGraph.DegreeSum
+-- `Int.quotientSpanEquivZMod`, the isomorphism between `ℤ ⧸ (n)` and `ZMod n` (session 6).
+public import Mathlib.Data.ZMod.QuotientRing
 -- Burnside's normal complement theorem (`Exercises.lean`, exercise 10), and Sylow theory with it.
 public import Mathlib.GroupTheory.Transfer
 -- Chebyshev's inequality (session 4, statement 20), and measure theory and integration with it.
