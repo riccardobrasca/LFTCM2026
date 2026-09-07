@@ -17,10 +17,19 @@ open Filter Topology TopologicalSpace
 open MeasureTheory intervalIntegral
 
 noncomputable section
+
 section Filters
 
-/- # Limits -/
 
+
+
+
+
+
+
+
+
+/- # Limits -/
 
 /-
 In topology, one of basic concepts is that of a limit.
@@ -190,16 +199,17 @@ example (P Q : ℕ → Prop)
     ∀ᶠ n in atTop, P n ∧ Q n :=
   hP.and hQ
 
--- This example is quite simple: in more complicated examples, it's useful to separate the
--- bookkeeping from the mathematical content: this is what the `filter_upwards` tactic is good for.
+-- The `filter_upwards` tactic is good for reasoning with
+-- `∀ᶠ x, P x`.
 example (P Q : ℕ → Prop)
     (hP : ∀ᶠ n in atTop, P n)
     (hQ : ∀ᶠ n in atTop, Q n) :
     ∀ᶠ n in atTop, P n ∧ Q n := by
-  -- `filter_upwards [hP, hQ]` converts your goal to `∀ n, P n → Q n → (P n ∧ Q n)`
+  -- `filter_upwards [hP, hQ]` converts your goal to
+  -- `∀ n, P n → Q n → P n ∧ Q n`
   filter_upwards [hP, hQ]
   intro n hpn hqn
-  tauto -- solves logic exercises
+  tauto -- does basic logical reasoning
 
 end Filters
 
@@ -229,47 +239,13 @@ example {f : X → Y} :
 value `f x` tends to `f x₀` whenever `x` tends to `x₀`. -/
 example {f : X → Y} :
     Continuous f ↔ ∀ x₀, Tendsto f (𝓝 x₀) (𝓝 (f x₀)) := by
-  sorry -- exact?
+  exact?
 
 /- By definition, the right-hand side states that `f` is
 continuous at `x₀`. -/
 example {f : X → Y} {x₀ : X} :
     ContinuousAt f x₀ ↔ Tendsto f (𝓝 x₀) (𝓝 (f x₀)) := by
   rfl
-
--- Stated in terms of the order on filters, this is equivalent to the following.
-example {f : X → Y} {x : X} :
-    ContinuousAt f x ↔ (𝓝 x).map f ≤ 𝓝 (f x) := by
-  sorry --rfl
-
-
--- Let us use this to prove that the composition of continuous functions is continuous.
-example {f : X → Y} {g : Y → Z} {x : X} (hf : ContinuousAt f x) (hg : ContinuousAt g (f x)) :
-    ContinuousAt (g ∘ f) x := by
-  -- ultra short version: exact hg.comp hf
-  rw [ContinuousAt] at hf hg ⊢ -- optional
-  apply Tendsto.comp
-  apply hg
-  apply hf
-
--- We already proved this in the first class --- but note how this follows immediately from
--- the composition lemma that we proved for filters!
-
--- In particular, the composition of continuous functions is continuous.
-example {f : X → Y} {g : Y → Z} (hf : Continuous f) (hg : Continuous g) :
-    Continuous (g ∘ f) := by
-  rw [continuous_iff_continuousAt] at hf hg ⊢
-  intro x
-  apply (hg (f x)).comp (hf x)
-
-
-
-
-
-
-
-
-
 
 
 
@@ -287,26 +263,24 @@ example : Continuous (fun x ↦ 2 + x * Real.sin x) := by
     · exact continuous_sin
   done
 
-/- Manually applying them gets kind of tedious, however: is there a tactic to help us?
-Yes: the `fun_prop` tactic is great for proving goals of the form "this function is the
-composition of continuous functions, therefore continuous" -/
+/- The `fun_prop` tactic automates these boring proofs. -/
 
 example : Continuous (fun x ↦ 2 + x * Real.sin x) := by
   fun_prop
 
-example {f : ℝ → ℝ} (hf : Continuous f) : ContinuousAt (fun x ↦ 2 + f x * Real.sin x) 2 := by
+example {f : ℝ → ℝ} (hf : Continuous f) :
+    ContinuousAt (fun x ↦ 2 + f x * Real.sin x) 2 := by
   fun_prop
 
--- `fun_prop` know about measurability, differentiability etc. and the relations between them
--- (e.g., differentiable functions are continuous, continuous functions are measurable, etc.)
+/- `fun_prop` knows about measurability, differentiability etc.
+and knows the relations between them
+(e.g., differentiable functions are continuous,
+continuous functions are measurable, etc.) -/
 
 
 
-
-
-/- A homeomorphism between topological spaces is an equivalence
-whose map and inverse map are both continuous. -/
-#check Homeomorph
+/- `X ≃ₜ Y` is the type of homeomorphisms between topological spaces.  -/
+#check X ≃ₜ Y
 
 
 
@@ -327,6 +301,7 @@ example : RegularSpace X ↔ ∀ (s : Set X) (a : X),
     IsClosed s → a ∉ s → Disjoint (𝓝ˢ s) (𝓝 a) := by
   exact?
 
+
 /- A set is compact if every open cover has a finite subcover. -/
 
 example {K : Set X} : IsCompact K ↔ ∀ {ι : Type u}
@@ -334,7 +309,7 @@ example {K : Set X} : IsCompact K ↔ ∀ {ι : Type u}
     ∃ t : Finset ι, K ⊆ ⋃ i ∈ t, U i := by
   exact?
 
-/- We use `CompactSpace` to say that a type is compact. -/
+/- We use `CompactSpace` to say that a whole space is compact. -/
 
 #check CompactSpace
 
@@ -369,6 +344,7 @@ example (s : Set X) :
     IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, Metric.ball x ε ⊆ s :=
   Metric.isOpen_iff
 
+/- Lean already knows that many types are naturally metric spaces. -/
 #synth MetricSpace ℝ
 
 
@@ -399,12 +375,14 @@ example (f : ℝ → ℝ) (x : ℝ) (h : ¬ DifferentiableAt ℝ f x) :
     deriv f x = 0 := by
   exact?
 
+
+
 /- So proving that `deriv f x = y` doesn't
 necessarily mean that `f` is differentiable.
 Often it is nicer to use the predicate `HasDerivAt f y x`,
 which states that `f` is differentiable and `f'(x) = y`. -/
 
-example (x : ℝ) : HasDerivAt Real.sin (Real.cos x) x :=
+example (x : ℝ) : HasDerivAt sin (cos x) x :=
   hasDerivAt_sin x
 
 
@@ -413,6 +391,8 @@ without specifying its derivative. -/
 
 example (x : ℝ) : DifferentiableAt ℝ sin x :=
   differentiableAt_sin
+
+
 
 /- Mathlib contains lemmas stating that common operations satisfy
 `HasDerivAt` and `DifferentiableAt` and to compute `deriv`. -/
@@ -423,8 +403,8 @@ example (x : ℝ) : DifferentiableAt ℝ sin x :=
 
 
 example (x : ℝ) :
-    HasDerivAt (fun x ↦ Real.cos x + Real.sin x)
-    (Real.cos x - Real.sin x) x := by
+    HasDerivAt (fun x ↦ cos x + sin x)
+    (cos x - sin x) x := by
   rw [sub_eq_neg_add]
   apply HasDerivAt.add
   · exact?
@@ -485,23 +465,24 @@ example (f : ℝ → ℝ) {a b : ℝ} (hab : a < b)
 
 
 
-/- We can more generally talk about the derivative of functions between normed spaces.
--/
+/- We can more generally talk about the derivative of functions between normed spaces. -/
 
--- This states that E is an `ℝ`-Banach space.
+-- This states that E is a normed vector space over `ℝ`.
 variable {E : Type*} [NormedAddCommGroup E]
-variable [NormedSpace ℝ E] [CompleteSpace E]
+variable [NormedSpace ℝ E]
+-- add `[CompleteSpace E]` to make `E` a Banach space.
 
+/- If the codomain is a normed vector space,
+everything works the same as before.
 
-
-/- We can also take the derivative of functions that take values in a
-normed vector space. -/
-
--- Proving differentiability is easy using fun_prop.
+`fun_prop` can prove a lot of differentiability goals
+(but it cannot prove `HasDerivAt` or `deriv ... = ...`) -/
 example {x : ℝ} :
     DifferentiableAt ℝ
-      (fun x ↦ ((Real.cos x) ^ 2, (Real.sin x) ^ 2)) x := by
+      (fun x ↦ (Real.cos x ^ 2, Real.sin x ^ 2)) x := by
   fun_prop
+
+
 
 /- If the domain is a normed space we can define the
 total derivative, which will be a continuous linear map. -/
@@ -516,25 +497,40 @@ variable {𝕜 : Type*} [NontriviallyNormedField 𝕜]
 
 #check E →L[𝕜] F
 
-/- We define the *Fréchet derivative* of any function between normed spaces. -/
+/- We define the *Fréchet derivative* of any function
+between normed spaces. -/
 
 example (f : E → F) (f' : E →L[𝕜] F) (x₀ : E) :
     HasFDerivAt f f' x₀ ↔
-    Tendsto (fun x ↦ ‖f x - f x₀ - f' (x - x₀)‖ / ‖x - x₀‖) (𝓝 x₀) (𝓝 0) := by
+    Tendsto (fun x ↦ ‖f x - f x₀ - f' (x - x₀)‖ / ‖x - x₀‖)
+      (𝓝 x₀) (𝓝 0) := by
   simp_rw [div_eq_inv_mul, hasFDerivAt_iff_tendsto]
 
-example (f : E → F) (f' : E →L[𝕜] F) (x₀ : E) (hff' : HasFDerivAt f f' x₀) :
+example (f : E → F) (f' : E →L[𝕜] F) (x₀ : E)
+    (hf : HasFDerivAt f f' x₀) :
     fderiv 𝕜 f x₀ = f' :=
-  hff'.fderiv
+  hf.fderiv
 
--- Careful: in higher dimensions, a function can have several derivatives within a set,
--- if that set is sufficiently "bad".
--- However, on "nice" sets, it is: this includes open sets and convex sets with non-empty interior.
+/- Careful: in higher dimensions,
+a function can have several derivatives within a set,
+if that set is sufficiently "bad".
+However, on "nice" sets, it is unique.
+This includes open sets and convex sets with non-empty interior.
+-/
 #check UniqueDiffOn
 
-example {s : Set E} (hs : IsOpen s) : UniqueDiffOn 𝕜 s := by exact IsOpen.uniqueDiffOn hs
+example {s : Set E} (hs : IsOpen s) :
+  UniqueDiffOn 𝕜 s := IsOpen.uniqueDiffOn hs
 
 #check uniqueDiffOn_convex
+
+#click_suggestions
+example (f : E → F) (f₁' f₂' : E →L[𝕜] F) (s : Set E) (x₀ : E)
+    (hf₁ : HasFDerivWithinAt f f₁' s x₀)
+    (hf₂ : HasFDerivWithinAt f f₂' s x₀)
+    (h : UniqueDiffOn 𝕜 s) (hx : x₀ ∈ s) :
+    f₁' = f₂' :=
+  h.eq _ hf₁ hf₂
 
 
 
