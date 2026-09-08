@@ -296,7 +296,8 @@ that the empty set and the universal set belong to the collection. -/
 -- **1** Define the structure of a Cortological space on a type `X`: should this be a class?
 
 /- **2** Put a Cortological structure on `ℕ`, declaring that a non-empty set is "open" if it
-contains arbitrarily large elements, and then prove that the intersection of two opens is open:-/
+contains all elements larger than a given bound, and then prove that the intersection of two opens
+is open:-/
 
 /- **3** Make sure that if `X` and `Y` are both `CortologicalSpaces`, Lean automatically puts a
 structure of `CortologicalSpace` on `X × Y`: I'm not asking any relation among this structure
