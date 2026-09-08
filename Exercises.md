@@ -113,9 +113,9 @@ subgroup `H` of cardinality `d`.
 
 Prove that a group is never the union of two proper subgroups.
 
-**Stating: 4. Proving: 2.** Think about how to phrase "is the union of" — probably as a hypothesis
-that every element lies in one of the two, with the conclusion that one of them is everything.
-The proof is three lines and uses no theory at all.
+**Stating: 4. Proving: 2.** "Is the union of" becomes the hypothesis that every element lies in one
+of the two subgroups; the conclusion is that one of them is the whole group. No theory beyond the
+subgroup axioms.
 
 ## 12. Cubes and fifth powers force commutativity
 
