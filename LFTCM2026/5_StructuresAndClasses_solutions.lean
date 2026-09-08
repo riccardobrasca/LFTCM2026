@@ -17,17 +17,6 @@ section Examples
 -- ### Some crazy stuff
 
 
-example {G : Type*} [CommGroup G] (N : Subgroup G) : CommGroup (G ⧸ N) := by
-  constructor --we'll see later why it appears here
-  intro a b
-  obtain ⟨a', ha'⟩ := QuotientGroup.mk'_surjective N a
-  obtain ⟨b', hb'⟩ := QuotientGroup.mk'_surjective N b
-  rw [← ha', ← hb'/- , QuotientGroup.mk'_apply, QuotientGroup.mk'_apply-/]
-  simp only [QuotientGroup.mk'_apply]
-  apply CommGroup.mul_comm
-  -- exact QuotientGroup.Quotient.commGroup N
-  done
-
 /- `Lean` is not so stupid after all, it understands that metric spaces have a topology...
 but how is this possible? -/
 example {X Y : Type*} [MetricSpace X] [MetricSpace Y] [Group Y] [IsTopologicalGroup Y]
