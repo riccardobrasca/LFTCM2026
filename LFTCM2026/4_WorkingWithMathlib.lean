@@ -10,6 +10,8 @@ public import LFTCM2026.Preliminaries
 
 open Nat
 
+--#click_suggestions
+
 /-!
 # Working with Mathlib
 
