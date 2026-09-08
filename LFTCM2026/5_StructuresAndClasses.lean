@@ -17,10 +17,6 @@ section Examples
 -- ### Some crazy stuff
 
 
-example {G : Type*} [CommGroup G] (N : Subgroup G) : CommGroup (G ⧸ N) := by
-  sorry
-  done
-
 /- `Lean` is not so stupid after all, it understands that metric spaces have a topology...
 but how is this possible? -/
 example {X Y : Type*} [MetricSpace X] [MetricSpace Y] [Group Y] [IsTopologicalGroup Y]
