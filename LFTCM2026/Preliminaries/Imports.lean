@@ -15,10 +15,10 @@ public import Mathlib.Tactic
 public import Mathlib.Analysis.Complex.Polynomial.Basic
 -- Carathéodory's theorem, and convexity in general (session 4, statement 18).
 public import Mathlib.Analysis.Convex.Caratheodory
--- Numerical bounds on `π` (`Exercises.lean`, exercise 8).
+-- Numerical bounds on `π` (`Exercises.md`, exercise 8).
 public import Mathlib.Analysis.Real.Pi.Bounds
 -- Integrals of the elementary functions, and the differential calculus behind them
--- (`Exercises.lean`, exercises 7 and 9).
+-- (`Exercises.md`, exercises 7 and 9).
 public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 -- Harmonic series divergence (`SubtleStatement.lean`).
 public import Mathlib.Analysis.PSeries
@@ -26,7 +26,7 @@ public import Mathlib.Analysis.PSeries
 public import Mathlib.Combinatorics.SimpleGraph.DegreeSum
 -- `Int.quotientSpanEquivZMod`, the isomorphism between `ℤ ⧸ (n)` and `ZMod n` (session 6).
 public import Mathlib.Data.ZMod.QuotientRing
--- Burnside's normal complement theorem (`Exercises.lean`, exercise 10), and Sylow theory with it.
+-- Burnside's normal complement theorem (`Exercises.md`, exercise 10), and Sylow theory with it.
 public import Mathlib.GroupTheory.Transfer
 -- Chebyshev's inequality (session 4, statement 20), and measure theory and integration with it.
 public import Mathlib.Probability.Moments.Variance
